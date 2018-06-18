@@ -1,22 +1,38 @@
 <template>
     <div class="blogManager">
-      <el-row>
-        <el-col :xs="4" :sm="6" :md="8" :lg="9" :xl="11"  v-for="(o, index) in 16" :key="o.value" :offset="index > 0 ? 0 : 0">
-          <el-card :body-style="{ padding: '0px' }">
-            <div style="padding: 14px;">
-              <span>好吃的汉堡</span>
-              <div class="bottom clearfix">
-                <time class="time">{{ currentDate }}</time>
-                <template>
-                  <el-button type="text" class="button">修改</el-button>
-                  <el-button type="text" @click="open" class="button">删除</el-button>
-                </template>
+      <div id="left">
+        <el-row>
+          <div>
+            <router-link to="/blogEditor"><el-button id="button" type="danger">发布文章</el-button></router-link>
+          </div>
+          <el-col :span="8" v-for="(o, index) in 16" :key="o.value" :offset="index > 0 ? 0 : 0">
+            <el-card :body-style="{ padding: '0px' }">
+              <div style="padding: 14px;">
+                <span>好吃的汉堡</span>
+                <div class="bottom clearfix">
+                  <time class="time">{{ currentDate }}</time>
+                  <template>
+                    <el-button type="text" class="button">修改</el-button>
+                    <el-button type="text" @click="open" class="button">删除</el-button>
+                  </template>
+                </div>
               </div>
-            </div>
-          </el-card>
-        </el-col>
-      </el-row>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
 
+      <div id="right">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span><i class="el-icon-edit">&nbsp;&nbsp;</i>热门标签</span>
+            <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
+          </div>
+          <div v-for="o in cardData" :key="o.value" class="text item">
+            {{'列表内容 ' + o.message }}
+          </div>
+        </el-card>
+      </div>
     </div>
 </template>
 
@@ -25,7 +41,14 @@
     data() {
       return {
         currentDate: new Date(),
-        visible: false,
+        cardData: [
+          {
+            message: '第一篇文章'
+          },
+          {
+            message: '第二篇文章'
+          }
+        ]
       };
     },
     methods: {
@@ -89,4 +112,14 @@
     clear: both
   }
 
+  .blogManager #left #button {
+    position: fixed;
+    right: 10px;
+  }
+
+  .blogManager #right {
+    position: fixed;
+    right: 10px;
+    top: 118px;
+  }
 </style>

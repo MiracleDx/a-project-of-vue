@@ -100,4 +100,8 @@ export default {
     text-align: center;
     line-height: 60px;
   }
+
+  a {
+    text-decoration: none;
+  }
 </style>

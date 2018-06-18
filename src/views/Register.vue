@@ -89,6 +89,29 @@
   }
 </script>
 
-<style>
+<style scoped>
+  .form-table {
+    text-align: left;
+    width: 30%;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #c975e6;
+    border-radius: 20px;
+  }
 
+  .form-table h1 {
+    text-align: center;
+  }
+
+  .form-table input {
+    width: 300px;
+  }
+
+  .form-table el-button {
+    text-align: center;
+  }
+
+  .form-table .el-form-item label {
+    text-align: left;
+  }
 </style>

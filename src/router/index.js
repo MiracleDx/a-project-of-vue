@@ -5,6 +5,10 @@ import Login from '@/views/Login'
 import Register from '@/views/Register'
 import Persional from '@/components/Persional'
 import BlogManager from '@/views/BlogManager'
+import CommentManager from '@/views/CommentManager'
+import InfoManager from '@/views/InfoManager'
+import UpdatePass from '@/views/UPdatePass'
+import BlogEditor from '@/views/BlogEditor'
 
 Vue.use(Router)
 
@@ -34,6 +38,26 @@ export default new Router({
       path: '/blogManager',
       name: 'blogManager',
       component: BlogManager
+    },
+    {
+      path: '/commentManager',
+      name: 'commentManager',
+      component: CommentManager
+    },
+    {
+      path: '/infoManager',
+      name: 'infoManager',
+      component: InfoManager
+    },
+    {
+      path: '/updatePass',
+      name: 'udpatePass',
+      component: UpdatePass
+    },
+    {
+      path: '/blogEditor',
+      name: 'blogEditor',
+      component: BlogEditor
     }
   ]
 })

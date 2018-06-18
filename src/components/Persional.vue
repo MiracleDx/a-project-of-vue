@@ -18,8 +18,12 @@
             </template>
             <el-menu-item-group>
               <span slot="title">个人管理</span>
-              <el-menu-item index="1-1">补充信息</el-menu-item>
-              <el-menu-item index="1-2">修改密码</el-menu-item>
+              <router-link to="/infoManager">
+                <el-menu-item index="1-1">补充信息</el-menu-item>
+              </router-link>
+              <router-link to="/updatePass">
+                <el-menu-item index="1-2">修改密码</el-menu-item>
+              </router-link>
             </el-menu-item-group>
           </el-submenu>
           <el-menu-item index="2">
@@ -29,7 +33,9 @@
               <span slot="title">文章管理</span>
           </el-menu-item>
           <el-menu-item index="3">
+            <router-link to="/commentManager">
               <i class="el-icon-setting"></i>
+            </router-link>
               <span slot="title">评论管理</span>
           </el-menu-item>
         </el-menu>
