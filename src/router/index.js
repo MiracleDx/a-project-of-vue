@@ -9,6 +9,7 @@ import CommentManager from '@/views/CommentManager'
 import InfoManager from '@/views/InfoManager'
 import UpdatePass from '@/views/UPdatePass'
 import BlogEditor from '@/views/BlogEditor'
+import BlogDetail from '@/views/BlogDetail'
 
 Vue.use(Router)
 
@@ -58,6 +59,11 @@ export default new Router({
       path: '/blogEditor',
       name: 'blogEditor',
       component: BlogEditor
+    },
+    {
+      path: '/blogDetail',
+      name: 'blogDetail',
+      component: BlogDetail
     }
   ]
 })

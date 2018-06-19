@@ -8,7 +8,7 @@
           <el-col :span="8" v-for="(o, index) in 16" :key="o.value" :offset="index > 0 ? 0 : 0">
             <el-card :body-style="{ padding: '0px' }">
               <div style="padding: 14px;">
-                <span>好吃的汉堡</span>
+                <router-link to="/blogDetail"><span>好吃的汉堡</span></router-link>
                 <div class="bottom clearfix">
                   <time class="time">{{ currentDate }}</time>
                   <template>
@@ -28,16 +28,16 @@
             <span><i class="el-icon-edit">&nbsp;&nbsp;</i>热门标签</span>
             <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
           </div>
-          <div v-for="o in cardData" :key="o.value" class="text item">
-            {{'列表内容 ' + o.message }}
-          </div>
+          <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info">{{ o.message }}</el-tag>
         </el-card>
       </div>
     </div>
 </template>
 
 <script>
+  import BlogDetail from "./BlogDetail";
   export default {
+    components: {BlogDetail},
     data() {
       return {
         currentDate: new Date(),
@@ -122,4 +122,5 @@
     right: 10px;
     top: 118px;
   }
+
 </style>

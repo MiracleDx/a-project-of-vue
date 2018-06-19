@@ -30,9 +30,7 @@
           <span><i class="el-icon-edit">&nbsp;&nbsp;</i>热门标签</span>
           <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
         </div>
-        <div v-for="o in cardData" :key="o.value" class="text item">
-          {{'列表内容 ' + o.message }}
-        </div>
+        <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info">{{ o.message }}</el-tag>
       </el-card>
 
       <!--最热文章-->

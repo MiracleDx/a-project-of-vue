@@ -6,7 +6,7 @@
     </el-header>
 
     <el-container>
-      <el-aside>
+      <el-aside v-show="!isLogin">
         <Persional></Persional>
       </el-aside>
       <el-main>
@@ -31,9 +31,12 @@ export default {
   components: { Header, Footer, Persional },
   data () {
     return {
+      isLogin: false
     }
-  }
+  },
 }
+
+console.log("我还是喜欢着你.");
 </script>
 
 <style>
@@ -103,5 +106,11 @@ export default {
 
   a {
     text-decoration: none;
+  }
+
+  .tag {
+    height: 30px;
+    line-height: 30px;
+    margin: 0 10px;
   }
 </style>

@@ -47,7 +47,6 @@
           title: '',
           description: '',
           content:''
-
         },
         //表单验证
         rules: {

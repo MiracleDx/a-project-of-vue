@@ -7,11 +7,11 @@
       <el-button icon="el-icon-search" circle></el-button>
     </div>
     <div id="right">
-      <router-link to="/login"><el-button type="primary">登录</el-button></router-link>
-      <router-link to="/register"><el-button type="primary">注册</el-button></router-link>
+      <router-link v-show="!isLogin" to="/login"><el-button type="primary">登录</el-button></router-link>
+      <router-link v-show="!isLogin" to="/register"><el-button type="primary">注册</el-button></router-link>
       <el-dropdown  trigger="click">
-       <span class="el-dropdown-link" style="color: #ffffff">
-        登录用户<i class="el-icon-arrow-down el-icon--right"></i>
+       <span v-show="isLogin" class="el-dropdown-link" style="color: #ffffff">
+        {{ username }}<i class="el-icon-arrow-down el-icon--right"></i>
        </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>补充信息</el-dropdown-item>
@@ -20,7 +20,7 @@
               <el-dropdown-item>评论管理</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-      <router-link to="/logout"><el-button type="primary">退出登录</el-button></router-link>
+      <router-link v-show="isLogin" to="/logout"><el-button type="primary">退出登录</el-button></router-link>
     </div>
   </el-header>
 </template>
@@ -30,6 +30,8 @@
 export default {
   data () {
     return {
+      isLogin: true,
+      username: '登录用户xxx',
       inputsearch: ''
     }
   }
