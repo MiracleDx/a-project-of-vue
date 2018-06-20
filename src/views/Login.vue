@@ -4,13 +4,13 @@
     <div style="margin: 20px;"></div>
     <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
       <el-form-item label="用户名">
-        <el-input v-model="formLabelAlign.username"></el-input>
+        <el-input v-model="formLabelAlign.username"></el-input>{{ formLabelAlign.username }}
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="formLabelAlign.password"></el-input>
+        <el-input v-model="formLabelAlign.password"></el-input> {{ formLabelAlign.password }}
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">登录</el-button>
+        <el-button type="primary" @click="onSubmit">登录</el-button>
         <router-link to="/"><el-button type="primary">返回</el-button></router-link>
       </el-form-item>
     </el-form>
@@ -18,6 +18,9 @@
 </template>
 
 <script>
+
+
+
 export default {
   data () {
     return {
@@ -26,6 +29,20 @@ export default {
         username: '',
         password: ''
       }
+    }
+  },
+  methods: {
+    onSubmit() {
+      this.$http.post('/authlogin', {
+          username: this.formLabelAlign.username,
+          password: this.formLabelAlign.password
+      })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   }
 }

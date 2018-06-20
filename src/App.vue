@@ -15,9 +15,9 @@
     </el-container>
 
     <!--脚部-->
-    <el-footer>
+   <!-- <el-footer>
       <Footer></Footer>
-    </el-footer>
+    </el-footer>-->
 
   </el-container>
 </template>

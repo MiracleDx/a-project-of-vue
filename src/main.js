@@ -5,17 +5,20 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import App from './App'
 import router from './router'
-import  VueQuillEditor from 'vue-quill-editor'
+import VueQuillEditor from 'vue-quill-editor'
+import axios from './utils/AxiosConfig'
+
 // require styles 引入样式
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
-Vue.use(VueQuillEditor)
 
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 
 Vue.use(ElementUI)
+
+Vue.prototype.$http = axios
 
 /* eslint-disable no-new */
 new Vue({

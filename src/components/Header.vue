@@ -30,7 +30,7 @@
 export default {
   data () {
     return {
-      isLogin: true,
+      isLogin: false,
       username: '登录用户xxx',
       inputsearch: ''
     }

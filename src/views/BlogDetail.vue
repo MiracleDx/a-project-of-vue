@@ -13,19 +13,19 @@
           <span>&nbsp;发表于 &nbsp; {{ time }}</span>
         </div>
       </div>
-      <div id="bottom">
+      <div class="bottom">
         <el-button type="danger" class="button">编辑</el-button>
         <el-button type="danger" class="button">删除</el-button>
       </div>
     </div>
 
-    <div id="split"></div>
+    <div class="split"></div>
 
     <div id="content">
       <p>{{ contentDetail }}</p>
     </div>
 
-    <div id="split"></div>
+    <div class="split"></div>
 
     <div id="category">
       <span>标签:</span>
@@ -44,7 +44,7 @@
                       @ready="onEditorReady($event)">
         </quill-editor>
       </div>
-      <div id="bottom">
+      <div class="bottom">
         <el-button type="danger" @click="isLike = !isLike" class="button">{{ zan }}</el-button>
         <el-button type="danger" class="button">发表评论</el-button>
       </div>
@@ -53,18 +53,19 @@
     <br>
     <br>
 
-    <div id="commentDetail">
+    <div id="commentDetail" v-for="i in 4">
       <div id="commentLeft">
         <img src="/static/images/avatars/user.jpg" style="width: 50px">
         <div id="commentRight">
           <span>xxx</span>
-          <span>x楼</span>
+          <span>{{ i }}楼</span>
           <span>2018年6月19日 22:11:46</span>
           <i class="el-icon-delete" style="color: blue"></i>
-          <br>
+          <br/>
           <span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
         </div>
       </div>
+
     </div>
 
   </div>
@@ -152,17 +153,17 @@
     margin: 20px;
   }
 
-  .detail #title #bottom {
+  .detail #title .bottom {
     float: right;
     margin: 100px 20px;
   }
 
-  .detail #commentEditor #bottom {
+  .detail #commentEditor .bottom {
     float: right;
     margin: 0px 20px;
   }
 
-  .detail #split {
+  .detail .split {
     margin: 10px auto;
     width: 75%;
     border-bottom: 1px dashed #3a8ee6;
@@ -187,11 +188,12 @@
   .detail #commentDetail #commentLeft img {
     float: left;
     border-radius: 100%;
+
   }
 
   .detail #commentDetail #commentLeft #commentRight {
-    float: left;
-    margin: 5px 10px;
+    text-align: left;
+    margin: 2px 75px;
   }
 
   .edit_container {
