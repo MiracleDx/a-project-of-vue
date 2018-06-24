@@ -3,28 +3,50 @@
 import axios from 'axios'
 import qs from 'qs'
 
-axios.interceptors.request.use(config => {    // 这里的config包含每次请求的内容
-  // 判断localStorage中是否存在api_token
-  if (localStorage.getItem('api_token')) {
-    //  存在将api_token写入 request header
-    config.headers.apiToken = `${localStorage.getItem('api_token')}`;
+axios.interceptors.request.use(
+  config => {    // 这里的config包含每次请求的内容
+    // 判断localStorage中是否存在token
+    const token = localStorage.getItem('token');
+    if (token) {
+      //  存在将token写入 request header
+      config.headers.common['Authorization'] = 'yangxl ' + token;
   }
+  console.log(config)
   return config;
-}, err => {
-  return Promise.reject(err);
+},
+  err => {
+    return Promise.reject(err);
 });
 
-axios.interceptors.response.use(response => {
-  return response
-}, error => {
-  return Promise.resolve(error.response)
+axios.interceptors.response.use(
+  response => {
+    return response
+},
+  error => {
+    /*if (error.response.status === 401) {
+      Vue.prototype.$msgBox.showMsgBox({
+        title: '错误提示',
+        content: '您的登录信息已失效，请重新登录',
+        isShowCancelBtn: false
+      }).then((val) => {
+        router.push('/login');
+      }).catch(() => {
+        console.log('cancel');
+      });
+    } else {
+      Vue.prototype.$message.showMessage({
+        type: 'error',
+        content: '系统出现错误'
+      });
+    }*/
+    return Promise.reject(error);
 });
 
 function checkStatus (response) {
   // 如果http状态码正常，则直接返回数据
   if (response && (response.status === 200 || response.status === 304 ||
     response.status === 400)) {
-    return response
+    return response;
   }
   // 异常状态下，把错误信息返回去
   return {
@@ -51,11 +73,11 @@ export default {
       baseURL: 'http://127.0.0.1:8180/',
       url,
       data: JSON.stringify(data),
-      timeout: 50000,
+      timeout: 5000,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        'Content-Type': 'application/json;charset=utf-8'
+        'Content-Type': 'application/json;charset=utf-8',
       }
     }).then(
       (response) => {
@@ -75,7 +97,8 @@ export default {
       params, // get 请求时带的参数
       timeout: 5000,
       headers: {
-        'X-Requested-With': 'XMLHttpRequest'
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json;charset=utf-8',
       }
     }).then(
       (response) => {

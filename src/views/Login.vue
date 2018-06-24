@@ -4,10 +4,10 @@
     <div style="margin: 20px;"></div>
     <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
       <el-form-item label="用户名">
-        <el-input v-model="formLabelAlign.username"></el-input>{{ formLabelAlign.username }}
+        <el-input v-model="formLabelAlign.username"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="formLabelAlign.password"></el-input> {{ formLabelAlign.password }}
+        <el-input v-model="formLabelAlign.password"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">登录</el-button>
@@ -18,8 +18,6 @@
 </template>
 
 <script>
-
-
 
 export default {
   data () {
@@ -33,11 +31,39 @@ export default {
   },
   methods: {
     onSubmit() {
+      const loading = this.$loading({
+        lock: true,
+       // text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(255, 255, 255, 1)'
+      });
+      setTimeout(() => {
+        loading.close();
+      }, 3000);
+
+
+      let that = this;
       this.$http.post('/authlogin', {
           username: this.formLabelAlign.username,
           password: this.formLabelAlign.password
       })
         .then(function (response) {
+          if (response.data.code == '0') {
+            localStorage.setItem("token",response.data.data);
+            that.$http.get('/user/getUserInfo')
+              .then(function (response) {
+                if (response.data.code == '0') {
+                  that.$store.commit('getUserInfo', response.data.data);
+                  that.$store.commit('checkStatus');
+                  location.reload();
+                }
+                console.log(response);
+            })
+              .catch(function (error) {
+                console.log(error);
+              });
+            that.$router.push("/");
+          }
           console.log(response);
         })
         .catch(function (error) {

@@ -7,16 +7,17 @@ import App from './App'
 import router from './router'
 import VueQuillEditor from 'vue-quill-editor'
 import axios from './utils/AxiosConfig'
+import Vuex from 'vuex'
+import store from './utils/store'
 
 // require styles 引入样式
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
-
-Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
-
 Vue.use(ElementUI)
+
+Vue.use(Vuex)
 
 Vue.prototype.$http = axios
 
@@ -24,6 +25,7 @@ Vue.prototype.$http = axios
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>',
   render: h => h(App)

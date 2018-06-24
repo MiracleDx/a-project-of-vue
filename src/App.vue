@@ -6,7 +6,7 @@
     </el-header>
 
     <el-container>
-      <el-aside v-show="!isLogin">
+      <el-aside v-show="isLogin">
         <Persional></Persional>
       </el-aside>
       <el-main>
@@ -28,12 +28,22 @@ import Footer from './components/Footer.vue'
 import Persional from './components/Persional.vue'
 
 export default {
-  components: { Header, Footer, Persional },
-  data () {
+  components: {Header, Footer, Persional},
+  data() {
     return {
-      isLogin: false
+      isLogin: this.$store.state.isLogin
     }
   },
+  computed: {
+    getLoginStatus() {
+      return this.$store.state.isLogin;
+    }
+  },
+  watch: {
+    getLoginStatus(val) {
+      this.isLogin = val;
+    }
+  }
 }
 
 console.log("我还是喜欢着你.");

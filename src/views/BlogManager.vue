@@ -120,7 +120,7 @@
   .blogManager #right {
     position: fixed;
     right: 10px;
-    top: 118px;
+    top: 130px;
   }
 
 </style>

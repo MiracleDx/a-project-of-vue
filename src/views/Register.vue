@@ -20,6 +20,8 @@
     </div>
 </template>
 <script>
+  import { Message } from 'element-ui';
+
   export default {
     data() {
       var validateUsername = (rule, value, callback) => {
@@ -73,12 +75,43 @@
     },
     methods: {
       submitForm(formName) {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        setTimeout(() => {
+          loading.close();
+        }, 500);
+
+        let that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            this.$http.post('/register', {
+              username: this.ruleForm.username,
+              password: this.ruleForm.password
+            })
+              .then(function (response) {
+                if (response.data.code == '0') {
+                  that.$message({
+                    type: 'success',
+                    message: response.data.message
+                  })
+                  that.$router.push('/login')
+                  console.log(response);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
           } else {
             console.log('error submit!!');
-            return false;
           }
         });
       },

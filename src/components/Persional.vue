@@ -1,9 +1,9 @@
 <template>
     <div class="persional">
       <div class="avatar">
-        <img src="/static/images/avatars/user.jpg" style="width: 200px">
-        <h6>用户名</h6>
-        <h6>手机号</h6>
+        <img :src="user.avatar" style="width: 200px">
+        <h6>{{ user.username }}</h6>
+        <h6>{{ user.mobile }}</h6>
         <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
           <el-radio-button :label="false">展开</el-radio-button>
           <el-radio-button :label="true">收起</el-radio-button>
@@ -47,7 +47,13 @@
   export default {
     data() {
       return {
-        isCollapse: true
+        isCollapse: true,
+        isLogin: '',
+        user: {
+          username: this.$store.state.user.username,
+          avatar: this.$store.state.user.avatar,
+          mobile: this.$store.state.user.mobile
+        }
       };
     },
     methods: {
