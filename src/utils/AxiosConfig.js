@@ -73,7 +73,7 @@ export default {
       baseURL: 'http://127.0.0.1:8180/',
       url,
       data: JSON.stringify(data),
-      timeout: 5000,
+      timeout: 50000,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -95,7 +95,7 @@ export default {
       baseURL: 'http://127.0.0.1:8180/',
       url,
       params, // get 请求时带的参数
-      timeout: 5000,
+      timeout: 50000,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/json;charset=utf-8',

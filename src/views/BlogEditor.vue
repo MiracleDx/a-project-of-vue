@@ -44,6 +44,7 @@
     data() {
       return {
         infoForm: {
+          id: '',
           title: '',
           description: '',
           content:''
@@ -71,24 +72,40 @@
       onEditorReady(editor) {
       },
       onSubmit() {
+        let that = this;
         //提交
         //this.$refs.infoForm.validate，这是表单验证
         this.$refs.infoForm.validate((valid) => {
           if(valid) {
-            this.$post('/url',this.infoForm).then(res => {
-              if(res.errCode == 200) {
-                this.$message({
-                  message: res.errMsg,
-                  type: 'success'
-                });
-                this.$router.push('/url');
-              } else {
-                this.$message({
-                  message: res.errMsg,
-                  type:'error'
-                });
-              }
-            });
+            if (this.id !== '') {
+              this.$http.post('/blog/save', {
+                title: this.infoForm.title,
+                description: this.infoForm.description,
+                content: this.infoForm.content,
+                category: ''
+              }).then(function (response) {
+                if (response.data.code == '0') {
+                  that.infoForm.id = response.data.data.id;
+                  that.infoForm.title = response.data.data.title;
+                  that.infoForm.description = response.data.data.description;
+                  that.infoForm.content = response.data.data.description;
+                  that.$message({
+                    type: 'info',
+                    message: response.data.message
+                  })
+                  console.log(response.data);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              }).catch(function (error) {
+                console.log(error);
+              });
+            } else {
+              // upload
+            }
           }
         });
       }
