@@ -4,13 +4,14 @@
     <div id="title">
       <div id="left">
         <div>
-          <img src="/static/images/avatars/user.jpg" style="width: 100px">
+          <img :src="user.avatar" style="width: 100px">
         </div>
         <div id="center">
-          <span style="font-size: 25px">{{ title }}</span>
+          <span v-text="blog.title" style="font-size: 25px"></span>
           <br>
-          <span>{{ user }}</span>
-          <span>&nbsp;发表于 &nbsp; {{ time }}</span>
+          <span v-text="user.nickname ? user.nickname : user.username"></span>
+          <span v-show="blog.createTime">发表于:</span>
+          <span v-text="blog.createTime" style="color: red"></span>
         </div>
       </div>
       <div class="bottom">
@@ -22,7 +23,7 @@
     <div class="split"></div>
 
     <div id="content">
-      <p>{{ contentDetail }}</p>
+      <p v-html="blog.content"></p>
     </div>
 
     <div class="split"></div>
@@ -78,17 +79,8 @@
       name: "BlogDetail",
       data () {
         return {
-          title: '我是一个可爱的title',
-          user: 'xxx',
-          time: '2018-06-19 10:30:16',
-          contentDetail: '以S.H.I.E.L.D.为名的组织，其历史最早可以追溯到几千年前的古埃及。一位大英雄带领地球人打退了外星侵略者虫族，他的盾牌被作为标志，成立一个防范重大威胁的秘密组织。历代成员包括达·芬奇、伽利略、牛顿、张衡（我国东汉时期伟大的天文学家）等伟大人物；钢铁侠的父亲霍华德·史塔克和神奇先生的父亲纳撒尼尔·理查兹也是20世纪时的成员。 [2]\n' +
-          '        神盾局\n' +
-          '        而S.H.I.E.L.D.，是在二战后由Nicholas Joseph Fury成立的类似于FBI、CIA的官方军事行动组织和情报机构。现任指挥官是菲尔·科尔森（Philip Coulson）。国际安全理事会专门用于同超能力英雄接洽，并进行管理的特殊部队。内战里玛丽亚·希尔领导的S.H.I.E.L.D.战队就一直负责追捕反抗组织的超级英雄们。以天空母舰（Helicarrier）为基地。\n' +
-          '        曾被二战时期德国设立的秘密组织九头蛇渗透。\n' +
-          '        神盾局对手九头蛇的负责人红骷髅\n' +
-          '        神盾局对手九头蛇的负责人红骷髅\n' +
-          '        在《美国队长2》及《神盾局特工第一季》中。九头蛇组织彻底暴露，原来他们自二战之后就一直藏在神盾局之中，借着神盾局之手在世界各地制造恐慌和动乱，逼迫人们放弃自由以换取安全。\n' +
-          '        2008年“秘密入侵”后，神盾局被解散，重组为神锤H.A.M.M.E.R.，由绿魔领导。围城事件后H.A.M.M.E.R.被裁撤，S.H.I.E.L.D.回归。美国队长的女友莎朗·卡特、玛丽亚·希尔都作为组织与复仇者之间的联络人。震波女成为新的指挥官，而弗瑞由于衰迈而淡出，他的一个黑人血统儿子（也叫尼克·弗瑞）加入进来。',
+          user: '',
+          blog: '',
           cardData: [
             {
               message: '第一篇文章'
@@ -118,7 +110,44 @@
         }
       },
       mounted() {
-        //初始化
+        let that = this;
+        var id = that.$route.params.id;
+
+        if (id != '' && id != undefined) {
+          const loading = this.$loading({
+            lock: true,
+            // text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.8)'
+          });
+
+          this.$http.get('/blog/findOne/' + id, {}).then(function (response) {
+            loading.close();
+            if (response.data.code == '0') {
+              that.blog = response.data.data.blog;
+              that.user = response.data.data.user;
+              console.log(response.data.data);
+              this.$message({
+                type: 'info',
+                message: response.data.message
+              })
+              console.log(response.data);
+            } else {
+              this.$message({
+                type: 'error',
+                message: response.data.message
+              })
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '请重新选择要查看的文章'
+          })
+          that.$router.go(-1);
+        }
       },
       components: {
         //使用编辑器

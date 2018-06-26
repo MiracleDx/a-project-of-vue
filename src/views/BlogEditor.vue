@@ -47,7 +47,13 @@
           id: '',
           title: '',
           description: '',
-          content:''
+          content: '',
+          category: '',
+          createUser: '',
+          updateUser: '',
+          createTime: '',
+          updateTime: '',
+          status: '',
         },
         //表单验证
         rules: {
@@ -77,35 +83,47 @@
         //this.$refs.infoForm.validate，这是表单验证
         this.$refs.infoForm.validate((valid) => {
           if(valid) {
-            if (this.id !== '') {
-              this.$http.post('/blog/save', {
-                title: this.infoForm.title,
-                description: this.infoForm.description,
-                content: this.infoForm.content,
-                category: ''
-              }).then(function (response) {
-                if (response.data.code == '0') {
-                  that.infoForm.id = response.data.data.id;
-                  that.infoForm.title = response.data.data.title;
-                  that.infoForm.description = response.data.data.description;
-                  that.infoForm.content = response.data.data.description;
-                  that.$message({
-                    type: 'info',
-                    message: response.data.message
-                  })
-                  console.log(response.data);
-                } else {
-                  that.$message({
-                    type: 'error',
-                    message: response.data.message
-                  })
-                }
-              }).catch(function (error) {
-                console.log(error);
-              });
-            } else {
-              // upload
+            var url = '/blog/save';
+            if (that.infoForm.id != '') {
+              url = '/blog/update'
             }
+            this.$http.post(url, {
+              id: that.infoForm.id,
+              title: that.infoForm.title,
+              description: that.infoForm.description,
+              content: that.infoForm.content,
+              category: that.infoForm.category,
+              createUser: that.infoForm.createUser,
+              updateUser: that.infoForm.updateUser,
+              createTime: that.infoForm.createTime,
+              updateTime: that.infoForm.updateTime,
+              status: that.infoForm.status,
+            }).then(function (response) {
+              if (response.data.code == '0') {
+                that.infoForm.id = response.data.data.id;
+                that.infoForm.title = response.data.data.title;
+                that.infoForm.description = response.data.data.description;
+                that.infoForm.content = response.data.data.content;
+                that.infoForm.category =  response.data.data.category,
+                that.infoForm.createUser =  response.data.data.createUser,
+                that.infoForm.updateUser =  response.data.data.updateUser,
+                that.infoForm.createTime =  response.data.data.createTime,
+                that.infoForm.updateTime =  response.data.data.updateTime,
+                that.infoForm.status =  response.data.data.status,
+                that.$message({
+                  type: 'info',
+                  message: response.data.message
+                })
+                console.log(response.data);
+              } else {
+                that.$message({
+                  type: 'error',
+                  message: response.data.message
+                })
+              }
+            }).catch(function (error) {
+              console.log(error);
+            });
           }
         });
       }
