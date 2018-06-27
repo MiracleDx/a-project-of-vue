@@ -2,6 +2,8 @@
 
 import axios from 'axios'
 import qs from 'qs'
+import { Message } from 'element-ui';
+import router from '../router'
 
 axios.interceptors.request.use(
   config => {    // 这里的config包含每次请求的内容
@@ -23,22 +25,17 @@ axios.interceptors.response.use(
     return response
 },
   error => {
-    /*if (error.response.status === 401) {
-      Vue.prototype.$msgBox.showMsgBox({
-        title: '错误提示',
-        content: '您的登录信息已失效，请重新登录',
-        isShowCancelBtn: false
-      }).then((val) => {
-        router.push('/login');
+    if (error.response.status === 401) {
+      Message.warning('登录失效，请重新登录').then((val) => {
+
       }).catch(() => {
         console.log('cancel');
       });
+    } else if (error.response.status === 403) {
+      Message.warning('没有访问权限')
     } else {
-      Vue.prototype.$message.showMessage({
-        type: 'error',
-        content: '系统出现错误'
-      });
-    }*/
+      Message.error('系统错误，请联系管理员');
+    }
     return Promise.reject(error);
 });
 
@@ -58,10 +55,10 @@ function checkStatus (response) {
 function checkCode (res) {
   // 如果code异常(这里已经包括网络错误，服务器错误，后端抛出的错误)，可以弹出一个错误提示，告诉用户
   if (res.status === -404) {
-    alert(res.msg)
+    console.log(res.msg);
   }
   if (res.data && (!res.data.success)) {
-    // alert(res.data.error_msg)
+    // alert(res.data.error_msg);
   }
   return res
 }
@@ -92,6 +89,49 @@ export default {
   get (url, params) {  // get
     return axios({
       method: 'get',
+      baseURL: 'http://127.0.0.1:8180/',
+      url,
+      params, // get 请求时带的参数
+      timeout: 50000,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Content-Type': 'application/json;charset=utf-8',
+      }
+    }).then(
+      (response) => {
+        return checkStatus(response)
+      }
+    ).then(
+      (res) => {
+        return checkCode(res)
+      }
+    )
+  },
+  put (url, data) {  // put
+    return axios({
+      method: 'put',
+      baseURL: 'http://127.0.0.1:8180/',
+      url,
+      data: JSON.stringify(data),
+      timeout: 50000,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        'Content-Type': 'application/json;charset=utf-8',
+      }
+    }).then(
+      (response) => {
+        return checkStatus(response)
+      }
+    ).then(
+      (res) => {
+        return checkCode(res)
+      }
+    )
+  },
+  delete (url, params) {  // delete
+    return axios({
+      method: 'delete',
       baseURL: 'http://127.0.0.1:8180/',
       url,
       params, // get 请求时带的参数

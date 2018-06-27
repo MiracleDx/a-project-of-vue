@@ -1,6 +1,7 @@
 <template>
   <el-header>
     <div id="left">
+      <router-link to="/"><el-button type="info">主页</el-button></router-link>
       <el-button type="info">最新</el-button>
       <el-button type="info">最热</el-button>
       <el-input placeholder="请输入内容" v-model="inputsearch" clearable></el-input>

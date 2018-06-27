@@ -6,7 +6,7 @@
         <el-collapse-item v-for="i in blogs" :key="i.value" :title=i.title :name=i.index>
           <div  @click="findOne(i.id)">
             <div v-show="i.description">描述：{{ i.description }}</div>
-            <div>发表于 <span style="color: red">{{ i.createTime }}</span></div>
+            <div>发表于 <span style="color: red">{{ i.createTime | formatDate }}</span></div>
           </div>
         </el-collapse-item>
       </el-collapse>
@@ -49,42 +49,57 @@
 
 <script>
 
-export default {
-  data () {
-    return {
-      activeName: '1',
-      blogs: [],
-      cardData: []
-    }
-  },
-  created: function () {
-    let that = this;
-    this.$http.get('/blog/findAll', {
-    }).then(function (response) {
-      if (response.data.code == '0') {
-        that.blogs = response.data.data;
-        console.log(response.data.data);
-          this.$message({
-            type: 'info',
-            message: response.data.message
-          })
-        console.log(response.data);
-      } else {
-        this.$message({
-          type: 'error',
-          message: response.data.message
-        })
+  import {formatDate} from '../utils/date.js';
+
+  export default {
+    data () {
+      return {
+        activeName: '1',
+        blogs: [],
+        cardData: []
       }
-    }).catch(function (error) {
-      console.log(error);
-    });
-  },
-  methods: {
-    findOne (val) {
-      this.$router.push({name: "blogDetail", params: {id: val}});
+    },
+    created: function () {
+      let that = this;
+      this.$http.get('/findAllBlog', {
+        }).then(function (response) {
+          if (response.data.code == '0') {
+            that.blogs = response.data.data;
+            console.log(response.data.data);
+              this.$message({
+                type: 'info',
+                message: response.data.message
+              })
+            console.log(response.data);
+          } else {
+            this.$message({
+              type: 'error',
+              message: response.data.message
+            })
+          }
+        }).catch(function (error) {
+          console.log(error);
+        });
+    },
+    methods: {
+      findOne (val) {
+        if (localStorage.getItem('token')) {
+          this.$router.push({name: "blogDetail", params: {id: val}});
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '没有访问权限'
+          })
+        }
+      }
+    },
+    filters: {
+      formatDate: function(time) {
+        var date = new Date(time);
+        return formatDate(date, "yyyy-MM-dd hh:mm");
+      }
     }
   }
-}
 </script>
 
 <style scoped>

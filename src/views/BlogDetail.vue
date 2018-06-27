@@ -11,12 +11,12 @@
           <br>
           <span v-text="user.nickname ? user.nickname : user.username"></span>
           <span v-show="blog.createTime">发表于:</span>
-          <span v-text="blog.createTime" style="color: red"></span>
+          <span v-text="$options.filters.formatDate(blog.createTime)" style="color: red"></span>
         </div>
       </div>
-      <div class="bottom">
-        <el-button type="danger" class="button">编辑</el-button>
-        <el-button type="danger" class="button">删除</el-button>
+      <div class="bottom" v-show="show">
+        <el-button type="danger" @click="goUpdate" class="button">编辑</el-button>
+        <el-button type="danger" @click="goDelete" class="button">删除</el-button>
       </div>
     </div>
 
@@ -74,6 +74,7 @@
 
 <script>
   import { quillEditor } from 'vue-quill-editor' //调用编辑器
+  import {formatDate} from '../utils/date.js';
 
     export default {
       name: "BlogDetail",
@@ -91,11 +92,39 @@
           ],
           commentCentent: '',
           isLike: true,
+          show: false
         }
       },
       methods: {
         onEditorReady(editor) {
         },
+        goUpdate() {
+          this.$router.push({name: "blogEditor", params: {blog: this.blog}});
+        },
+        goDelete() {
+          let that = this;
+          this.$http.delete('/blog/delete/' + this.blog.id, {})
+            .then(function (response) {
+            if (response.data.code == '0') {
+              that.$message({
+                type: 'info',
+                message: response.data.message
+              });
+              setTimeout(() => {
+                that.$router.go(-1);
+              }, 500);
+
+              console.log(response.data);
+            } else {
+              that.$message({
+                type: 'error',
+                message: response.data.message
+              })
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
+        }
       },
       computed: {
         editor() {
@@ -126,19 +155,23 @@
             if (response.data.code == '0') {
               that.blog = response.data.data.blog;
               that.user = response.data.data.user;
+              if ((that.user.nickname ? that.user.nickname : that.user.username) === localStorage.getItem('username')) {
+                that.show = true;
+              }
               console.log(response.data.data);
-              this.$message({
+              that.$message({
                 type: 'info',
                 message: response.data.message
               })
               console.log(response.data);
             } else {
-              this.$message({
+              that.$message({
                 type: 'error',
                 message: response.data.message
               })
             }
           }).catch(function (error) {
+            loading.close();
             console.log(error);
           });
         } else {
@@ -152,6 +185,12 @@
       components: {
         //使用编辑器
         quillEditor
+      },
+      filters: {
+        formatDate: function(time) {
+          var date = new Date(time);
+          return formatDate(date, "yyyy-MM-dd hh:mm");
+        }
       }
     }
 </script>

@@ -27,6 +27,7 @@
 
           <el-form-item>
             <el-button type="primary" @click="onSubmit">确认提交</el-button>
+            <el-button type="primary" @click="reEdit">重新发布</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -83,54 +84,117 @@
         //this.$refs.infoForm.validate，这是表单验证
         this.$refs.infoForm.validate((valid) => {
           if(valid) {
-            var url = '/blog/save';
-            if (that.infoForm.id != '') {
-              url = '/blog/update'
+            var url = null;
+            if (that.infoForm.id == '') {
+              url = '/blog/save';
+              this.$http.post(url, {
+                id: that.infoForm.id,
+                title: that.infoForm.title,
+                description: that.infoForm.description,
+                content: that.infoForm.content,
+                category: that.infoForm.category,
+                createUser: that.infoForm.createUser,
+                updateUser: that.infoForm.updateUser,
+                createTime: that.infoForm.createTime,
+                updateTime: that.infoForm.updateTime,
+                status: that.infoForm.status
+              }).then(function (response) {
+                if (response.data.code == '0') {
+                  that.infoForm.id = response.data.data.id;
+                  that.infoForm.title = response.data.data.title;
+                  that.infoForm.description = response.data.data.description;
+                  that.infoForm.content = response.data.data.content;
+                  that.infoForm.category =  response.data.data.category,
+                  that.infoForm.createUser =  response.data.data.createUser,
+                  that.infoForm.updateUser =  response.data.data.updateUser,
+                  that.infoForm.createTime =  response.data.data.createTime,
+                  that.infoForm.updateTime =  response.data.data.updateTime,
+                  that.infoForm.status =  response.data.data.status,
+                  that.$message({
+                    type: 'info',
+                    message: response.data.message
+                  })
+                  console.log(response.data);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              }).catch(function (error) {
+                console.log(error);
+              });
+            } else {
+              url = '/blog/update';
+              this.$http.put(url, {
+                id: that.infoForm.id,
+                title: that.infoForm.title,
+                description: that.infoForm.description,
+                content: that.infoForm.content,
+                category: that.infoForm.category,
+                createUser: that.infoForm.createUser,
+                updateUser: that.infoForm.updateUser,
+                createTime: that.infoForm.createTime,
+                updateTime: that.infoForm.updateTime,
+                status: that.infoForm.status
+              }).then(function (response) {
+                if (response.data.code == '0') {
+                  that.infoForm.id = response.data.data.id;
+                  that.infoForm.title = response.data.data.title;
+                  that.infoForm.description = response.data.data.description;
+                  that.infoForm.content = response.data.data.content;
+                  that.infoForm.category = response.data.data.category,
+                    that.infoForm.createUser = response.data.data.createUser,
+                    that.infoForm.updateUser = response.data.data.updateUser,
+                    that.infoForm.createTime = response.data.data.createTime,
+                    that.infoForm.updateTime = response.data.data.updateTime,
+                    that.infoForm.status = response.data.data.status,
+                    that.$message({
+                      type: 'info',
+                      message: response.data.message
+                    })
+                  console.log(response.data);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              }).catch(function (error) {
+                console.log(error);
+              });
             }
-            this.$http.post(url, {
-              id: that.infoForm.id,
-              title: that.infoForm.title,
-              description: that.infoForm.description,
-              content: that.infoForm.content,
-              category: that.infoForm.category,
-              createUser: that.infoForm.createUser,
-              updateUser: that.infoForm.updateUser,
-              createTime: that.infoForm.createTime,
-              updateTime: that.infoForm.updateTime,
-              status: that.infoForm.status,
-            }).then(function (response) {
-              if (response.data.code == '0') {
-                that.infoForm.id = response.data.data.id;
-                that.infoForm.title = response.data.data.title;
-                that.infoForm.description = response.data.data.description;
-                that.infoForm.content = response.data.data.content;
-                that.infoForm.category =  response.data.data.category,
-                that.infoForm.createUser =  response.data.data.createUser,
-                that.infoForm.updateUser =  response.data.data.updateUser,
-                that.infoForm.createTime =  response.data.data.createTime,
-                that.infoForm.updateTime =  response.data.data.updateTime,
-                that.infoForm.status =  response.data.data.status,
-                that.$message({
-                  type: 'info',
-                  message: response.data.message
-                })
-                console.log(response.data);
-              } else {
-                that.$message({
-                  type: 'error',
-                  message: response.data.message
-                })
-              }
-            }).catch(function (error) {
-              console.log(error);
-            });
           }
+        });
+      },
+      reEdit() {
+        this.$confirm('此操作将重新发布, 是否进行操作?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.infoForm = {};
+          this.$message({
+            type: 'info',
+            message: '已重置'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });
         });
       }
     },
     components: {
 //使用编辑器
       quillEditor
+    },
+    created: function() {
+      var blog = this.$route.params.blog;
+      if (blog) {
+        this.infoForm = blog;
+      }
     }
   }
 </script>
