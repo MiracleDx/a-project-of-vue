@@ -10,7 +10,7 @@
         <Persional></Persional>
       </el-aside>
       <el-main>
-        <router-view></router-view>
+        <router-view v-if="isRouterAlive"></router-view>
       </el-main>
     </el-container>
 
@@ -28,10 +28,16 @@ import Footer from './components/Footer.vue'
 import Persional from './components/Persional.vue'
 
 export default {
+  provide() {
+    return {
+      reload: this.reload
+    }
+  },
   components: {Header, Footer, Persional},
   data() {
     return {
-      isLogin: this.$store.state.isLogin
+      isLogin: this.$store.state.isLogin,
+      isRouterAlive: true
     }
   },
   computed: {
@@ -42,6 +48,14 @@ export default {
   watch: {
     getLoginStatus(val) {
       this.isLogin = val;
+    }
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false;
+      this.$nextTick(function() {
+        this.isRouterAlive = true
+      })
     }
   }
 }

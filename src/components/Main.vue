@@ -94,7 +94,7 @@
       }
     },
     filters: {
-      formatDate: function(time) {
+      formatDate(time) {
         var date = new Date(time);
         return formatDate(date, "yyyy-MM-dd hh:mm");
       }

@@ -85,7 +85,7 @@
         this.$refs.infoForm.validate((valid) => {
           if(valid) {
             var url = null;
-            if (that.infoForm.id == '') {
+            if (that.infoForm.id === '' || that.infoForm.id == undefined ) {
               url = '/blog/save';
               this.$http.post(url, {
                 id: that.infoForm.id,

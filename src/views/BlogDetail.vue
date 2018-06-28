@@ -1,5 +1,5 @@
 <template>
-  <div class="detail">
+  <div class="detail" v-show="this.blog.id">
 
     <div id="title">
       <div id="left">
@@ -33,40 +33,48 @@
       <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info">{{ o.message }}</el-tag>
     </div>
 
+    <div class="bottom">
+      <el-button type="danger" @click="isLike = !isLike" class="button">{{ zan }}</el-button>
+    </div>
+
     <br>
     <br>
 
-    <div id="commentEditor">
-      <span>评论:</span>
-      <div class="edit_container">
-        <quill-editor v-model="commentCentent"
-                      ref="myQuillEditor"
-                      class="editer"
-                      @ready="onEditorReady($event)">
-        </quill-editor>
-      </div>
-      <div class="bottom">
-        <el-button type="danger" @click="isLike = !isLike" class="button">{{ zan }}</el-button>
-        <el-button type="danger" class="button">发表评论</el-button>
+
+    <div v-if="commentShow">
+      <span>想对作者说点什么？</span><el-button type="primary" @click="showEditor">我来说一句</el-button>
+    </div>
+    <div v-else>
+      <div id="commentEditor">
+        <span>评论:</span>
+        <div class="edit_container">
+          <quill-editor v-model="commentCentent"
+                        ref="myQuillEditor"
+                        class="editer"
+                        @ready="onEditorReady($event)">
+          </quill-editor>
+        </div>
+        <div style="text-align: center">
+          <el-button type="primary" @click="onSubmit" class="button">发表评论</el-button>
+        </div>
       </div>
     </div>
 
     <br>
     <br>
 
-    <div id="commentDetail" v-for="i in 4">
+    <div id="commentDetail" v-for="(i, index) in comment">
       <div id="commentLeft">
-        <img src="/static/images/avatars/user.jpg" style="width: 50px">
+        <img :src="i.avatar" style="width: 50px">
         <div id="commentRight">
-          <span>xxx</span>
-          <span>{{ i }}楼</span>
-          <span>2018年6月19日 22:11:46</span>
+          <span v-text="i.nickname ? i.nickname : i.username"></span>&nbsp;
+          <span>{{ index + 1 }}楼</span>&nbsp;
+          <span v-text="$options.filters.formatDate(i.createTime)" style="color: red"></span>&nbsp;
           <i class="el-icon-delete" style="color: blue"></i>
           <br/>
-          <span>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+          <span v-html="i.content"></span>
         </div>
       </div>
-
     </div>
 
   </div>
@@ -78,10 +86,12 @@
 
     export default {
       name: "BlogDetail",
+      inject: ['reload'],
       data () {
         return {
           user: '',
-          blog: '',
+          blog: {},
+          comment: [],
           cardData: [
             {
               message: '第一篇文章'
@@ -92,7 +102,8 @@
           ],
           commentCentent: '',
           isLike: true,
-          show: false
+          show: false,
+          commentShow: true
         }
       },
       methods: {
@@ -124,6 +135,33 @@
           }).catch(function (error) {
             console.log(error);
           });
+        },
+        showEditor () {
+            return this.commentShow = false;
+        },
+        onSubmit() {
+          let that = this;
+          this.$http.post('/comment/save/', {
+            blogId: this.blog.id,
+            content: this.commentCentent
+          }).then(function (response) {
+            if (response.data.code == '0') {
+              console.log(response.data.data);
+              that.$message({
+                type: 'info',
+                message: response.data.message
+              })
+              that.reload();
+              console.log(response.data);
+            } else {
+              that.$message({
+                type: 'error',
+                message: response.data.message
+              })
+            }
+          }).catch(function (error) {
+            console.log(error);
+          });
         }
       },
       computed: {
@@ -136,6 +174,9 @@
           }  else {
             return "取消点赞";
           }
+        },
+        showEdiort() {
+          return false;
         }
       },
       mounted() {
@@ -147,11 +188,13 @@
             lock: true,
             // text: 'Loading',
             spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.8)'
+            background: 'rgba(0, 0, 0, 0.7)'
           });
 
           this.$http.get('/blog/findOne/' + id, {}).then(function (response) {
-            loading.close();
+            setTimeout(() => {
+              loading.close();
+            }, 200);
             if (response.data.code == '0') {
               that.blog = response.data.data.blog;
               that.user = response.data.data.user;
@@ -163,6 +206,24 @@
                 type: 'info',
                 message: response.data.message
               })
+              console.log(response.data);
+            } else {
+              that.$message({
+                type: 'error',
+                message: response.data.message
+              })
+            }
+          }).catch(function (error) {
+            loading.close();
+            console.log(error);
+          });
+
+          this.$http.get('/comment/findAllByBlogId/' + id, {}).then(function (response) {
+            setTimeout(() => {
+              loading.close();
+            }, 200);
+            if (response.data.code == '0') {
+              that.comment = response.data.data;
               console.log(response.data);
             } else {
               that.$message({
@@ -187,7 +248,7 @@
         quillEditor
       },
       filters: {
-        formatDate: function(time) {
+        formatDate(time) {
           var date = new Date(time);
           return formatDate(date, "yyyy-MM-dd hh:mm");
         }
@@ -226,7 +287,7 @@
     margin: 100px 20px;
   }
 
-  .detail #commentEditor .bottom {
+  .detail .bottom {
     float: right;
     margin: 0px 20px;
   }
