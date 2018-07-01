@@ -4,12 +4,12 @@
     <div id="title">
       <div id="left">
         <div>
-          <img :src="user.avatar" style="width: 100px">
+          <img :src="user.avatar" style="width: 100px; float: left">
         </div>
         <div id="center">
           <span v-text="blog.title" style="font-size: 25px"></span>
           <br>
-          <span v-text="user.nickname ? user.nickname : user.username"></span>
+          <span v-text="selectUsername(user)"></span>
           <span v-show="blog.createTime">发表于:</span>
           <span v-text="$options.filters.formatDate(blog.createTime)" style="color: red"></span>
         </div>
@@ -40,7 +40,6 @@
     <br>
     <br>
 
-
     <div v-if="commentShow">
       <span>想对作者说点什么？</span><el-button type="primary" @click="showEditor">我来说一句</el-button>
     </div>
@@ -56,6 +55,7 @@
         </div>
         <div style="text-align: center">
           <el-button type="primary" @click="onSubmit" class="button">发表评论</el-button>
+          <el-button type="primary" @click="showEditor">不想说了</el-button>
         </div>
       </div>
     </div>
@@ -63,16 +63,30 @@
     <br>
     <br>
 
-    <div id="commentDetail" v-for="(i, index) in comment">
+    <div id="commentDetail" v-for="i in comment">
       <div id="commentLeft">
-        <img :src="i.avatar" style="width: 50px">
+        <img :src="i.avatar" style="width: 50px; float: left">
         <div id="commentRight">
-          <span v-text="i.nickname ? i.nickname : i.username"></span>&nbsp;
-          <span>{{ index + 1 }}楼</span>&nbsp;
+          <span v-text="selectUsername(i)"></span>&nbsp;
+          <span>{{ i.floor }}楼</span>&nbsp;
           <span v-text="$options.filters.formatDate(i.createTime)" style="color: red"></span>&nbsp;
-          <i class="el-icon-delete" style="color: blue"></i>
+          <i class="el-icon-delete" @click="deleteComment(i)" style="color: blue"></i>
           <br/>
           <span v-html="i.content"></span>
+          <span @click="showInput(i)" style="color: #66ccff; float: right; font-size: 5px;">我也想说一句{{ showCount(i.children) }}</span>
+          <br><br><br><br>
+          <div id="children" style="margin: 0px; padding: 0px;">
+            <ul style="text-align: left; margin-left: 30%; display: block" v-for="c in i.children">
+              <li>{{ selectUsername(c) }} : <span v-show="c.replyUsername">回复 {{ c.replyNickname ? c.replyNickname : c.replyUsername }} :</span>
+                {{ c.content }}
+                <span class="el-icon-delete" @click="deleteComment(c)" style="color: #66ccff; float: right; font-size: 5px;"></span>
+              </li>
+              <li style="font-size: 5px; text-align: right; color: red">{{ c.createTime | formatDate }}
+                <span @click="showInput(i)" style="color: #66ccff">&nbsp;回复ta</span>
+              </li>
+              <li style="color: #8cc5ff">-----</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -103,43 +117,82 @@
           commentCentent: '',
           isLike: true,
           show: false,
-          commentShow: true
+          commentShow: true,
+          input: '',
+          index: ''
         }
       },
       methods: {
         onEditorReady(editor) {
+
         },
         goUpdate() {
-          this.$router.push({name: "blogEditor", params: {blog: this.blog}});
+          this.$confirm('该操作将修改此文章, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            center: true
+          }).then(() => {
+            this.$router.push({name: "blogEditor", params: {blog: this.blog}});
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消该操作'
+            });
+          });
+
         },
         goDelete() {
           let that = this;
-          this.$http.delete('/blog/delete/' + this.blog.id, {})
-            .then(function (response) {
-            if (response.data.code == '0') {
-              that.$message({
-                type: 'info',
-                message: response.data.message
-              });
-              setTimeout(() => {
-                that.$router.go(-1);
-              }, 500);
 
-              console.log(response.data);
-            } else {
-              that.$message({
-                type: 'error',
-                message: response.data.message
-              })
-            }
-          }).catch(function (error) {
-            console.log(error);
+          this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            center: true
+          }).then(() => {
+            this.$http.delete('/blog/delete/' + this.blog.id, {})
+              .then(function (response) {
+                if (response.data.code == '0') {
+                  that.$message({
+                    type: 'info',
+                    message: response.data.message
+                  });
+                  setTimeout(() => {
+                    that.$router.go(-1);
+                  }, 500);
+
+                  console.log(response.data);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              }).catch(function (error) {
+              console.log(error);
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
           });
         },
         showEditor () {
-            return this.commentShow = false;
+            return this.commentShow = !this.commentShow;
         },
         onSubmit() {
+          const loading = this.$loading({
+            lock: true,
+            // text: 'Loading',
+            spinner: 'el-icon-loading',
+            background: 'rgba(255, 255, 255, 1)'
+          });
+          setTimeout(() => {
+            loading.close();
+          }, 500);
+
           let that = this;
           this.$http.post('/comment/save/', {
             blogId: this.blog.id,
@@ -162,6 +215,88 @@
           }).catch(function (error) {
             console.log(error);
           });
+        },
+        selectUsername(val) {
+          return val.nickname ? val.nickname : val.username;
+        },
+        showInput(val) {
+          let that = this;
+
+          this.$prompt('请输入要回复的内容', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+            // inputErrorMessage: '邮箱格式不正确'
+          }).then(({ value }) => {
+
+            this.$http.post('/comment/save/', {
+              blogId: this.blog.id,
+              content: value,
+              pid: val.id,
+              replyUserId: val.createUser
+            }).then(function (response) {
+              if (response.data.code == '0') {
+                console.log(response.data.data);
+                that.$message({
+                  type: 'info',
+                  message: response.data.message
+                })
+                that.reload();
+                console.log(response.data);
+              } else {
+                that.$message({
+                  type: 'error',
+                  message: response.data.message
+                })
+              }
+            }).catch(function (error) {
+              console.log(error);
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '取消输入'
+            });
+          });
+        },
+        showCount(val) {
+          if (val.length > 0) {
+            return '(' + val.length + ')';
+          }
+        },
+        deleteComment(val) {
+          let that = this;
+
+          this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            center: true
+          }).then(() => {
+            this.$http.delete('/comment/deleteByCommentId/' + val.id, {})
+              .then(function (response) {
+                if (response.data.code == '0') {
+                  that.$message({
+                    type: 'info',
+                    message: response.data.message
+                  });
+                  that.reload();
+                  console.log(response.data);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              }).catch(function (error) {
+              console.log(error);
+            });
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          });
         }
       },
       computed: {
@@ -174,9 +309,6 @@
           }  else {
             return "取消点赞";
           }
-        },
-        showEdiort() {
-          return false;
         }
       },
       mounted() {
@@ -273,7 +405,6 @@
   }
 
   .detail #title img {
-    float: left;
     border-radius: 100%;
   }
 
@@ -283,7 +414,7 @@
   }
 
   .detail #title .bottom {
-    float: right;
+    /*float: right;*/
     margin: 100px 20px;
   }
 
@@ -309,15 +440,13 @@
     margin: 5px 10px;
   }
 
-  .detail  #commentDetail {
-    height: 100px;
+  .detail #commentDetail {
+    /*height: 100px;*/
     margin: 10px 10px;
   }
 
   .detail #commentDetail #commentLeft img {
-    float: left;
     border-radius: 100%;
-
   }
 
   .detail #commentDetail #commentLeft #commentRight {
@@ -328,6 +457,18 @@
   .edit_container {
     width: 90%;
     margin: 10px 20px;
+  }
+
+  ul {
+    padding: 0px;
+    margin: 0px;
+    display: block;
+  }
+
+  ul li {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
   }
 
 </style>

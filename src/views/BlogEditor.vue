@@ -54,6 +54,8 @@
           updateUser: '',
           createTime: '',
           updateTime: '',
+          createIp: '',
+          updateIp: '',
           status: '',
         },
         //表单验证
@@ -109,6 +111,8 @@
                   that.infoForm.updateUser =  response.data.data.updateUser,
                   that.infoForm.createTime =  response.data.data.createTime,
                   that.infoForm.updateTime =  response.data.data.updateTime,
+                  that.infoForm.createIp =  response.data.data.createIp,
+                  that.infoForm.updateIp =  response.data.data.updateIp,
                   that.infoForm.status =  response.data.data.status,
                   that.$message({
                     type: 'info',
@@ -136,6 +140,8 @@
                 updateUser: that.infoForm.updateUser,
                 createTime: that.infoForm.createTime,
                 updateTime: that.infoForm.updateTime,
+                createIp: that.infoForm.createIp,
+                updateIp: that.infoForm.updateIp,
                 status: that.infoForm.status
               }).then(function (response) {
                 if (response.data.code == '0') {
@@ -148,6 +154,8 @@
                     that.infoForm.updateUser = response.data.data.updateUser,
                     that.infoForm.createTime = response.data.data.createTime,
                     that.infoForm.updateTime = response.data.data.updateTime,
+                    that.infoForm.createIp =  response.data.data.createIp,
+                    that.infoForm.updateIp =  response.data.data.updateIp,
                     that.infoForm.status = response.data.data.status,
                     that.$message({
                       type: 'info',
