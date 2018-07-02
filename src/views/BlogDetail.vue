@@ -34,7 +34,7 @@
     </div>
 
     <div class="bottom">
-      <el-button type="danger" @click="isLike = !isLike" class="button">{{ zan }}</el-button>
+      <el-button type="danger" @click="changeStatus" class="button">{{ showZanStatus }}</el-button>
     </div>
 
     <br>
@@ -73,16 +73,20 @@
           <i class="el-icon-delete" @click="deleteComment(i)" style="color: blue"></i>
           <br/>
           <span v-html="i.content"></span>
-          <span @click="showInput(i)" style="color: #66ccff; float: right; font-size: 5px;">我也想说一句{{ showCount(i.children) }}</span>
+          <el-tooltip content="单击查看评论，中键回复" placement="top">
+            <span @click.left="showMyComment(i)" @click.middle="showInput(i)" style="color: #66ccff; float: right; font-size: 5px;">我也想说一句{{ showCount(i.children) }}</span>
+          </el-tooltip>
           <br><br><br><br>
           <div id="children" style="margin: 0px; padding: 0px;">
-            <ul style="text-align: left; margin-left: 30%; display: block" v-for="c in i.children">
+            <ul v-show="i.isDisplay" style="text-align: left; margin-left: 30%; display: block" v-for="c in i.children">
               <li>{{ selectUsername(c) }} : <span v-show="c.replyUsername">回复 {{ c.replyNickname ? c.replyNickname : c.replyUsername }} :</span>
                 {{ c.content }}
                 <span class="el-icon-delete" @click="deleteComment(c)" style="color: #66ccff; float: right; font-size: 5px;"></span>
               </li>
               <li style="font-size: 5px; text-align: right; color: red">{{ c.createTime | formatDate }}
-                <span @click="showInput(i)" style="color: #66ccff">&nbsp;回复ta</span>
+                <el-tooltip content="单击就可以回复咯" placement="top">
+                  <span @click="showInput(i)" style="color: #66ccff">&nbsp;回复ta</span>
+                </el-tooltip>
               </li>
               <li style="color: #8cc5ff">-----</li>
             </ul>
@@ -297,21 +301,65 @@
               message: '已取消删除'
             });
           });
+        },
+        showMyComment(val) {
+          return val.isDisplay = !val.isDisplay;
+        },
+        pushProp(val) {
+          this.$set(val, 'isDisplay', false);
+        },
+        changeStatus() {
+          let that = this;
+          if (this.showZan) {
+            this.$http.get('/total/addStatus/' + this.blog.id, {})
+              .then(function (response) {
+                if (response.data.code == '0') {
+                  that.blog.isLike = 0;
+                  that.$message({
+                    type: 'info',
+                    message: response.data.message
+                  });
+                  console.log(response.data);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              }).catch(function (error) {
+              console.log(error);
+            });
+          } else {
+            this.$http.get('/total/cancelStatus/' + this.blog.id, {})
+              .then(function (response) {
+                if (response.data.code == '0') {
+                  that.blog.isLike = 1;
+                  that.$message({
+                    type: 'info',
+                    message: response.data.message
+                  });
+                  console.log(response.data);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              }).catch(function (error) {
+              console.log(error);
+            });
+          }
         }
       },
       computed: {
         editor() {
           return this.$refs.myQuillEditor.quill
         },
-        zan() {
-          if (this.isLike) {
-            return "点赞";
-          }  else {
-            return "取消点赞";
-          }
+        showZanStatus() {
+         return this.blog.isLike == 0 ? "点赞" : "取消点赞";
         }
       },
-      mounted() {
+      created: function() {
         let that = this;
         var id = that.$route.params.id;
 
@@ -356,6 +404,9 @@
             }, 200);
             if (response.data.code == '0') {
               that.comment = response.data.data;
+              for (let i = 0; i < that.comment.length; i ++) {
+                  that.pushProp(that.comment[i]);
+                }
               console.log(response.data);
             } else {
               that.$message({
@@ -383,6 +434,11 @@
         formatDate(time) {
           var date = new Date(time);
           return formatDate(date, "yyyy-MM-dd hh:mm");
+        }
+      },
+      watch: {
+        showZanStatus(val) {
+          return this.blog.isLike = val;
         }
       }
     }

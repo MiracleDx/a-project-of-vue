@@ -19,7 +19,7 @@
           <span><i class="el-icon-edit">&nbsp;&nbsp;</i>热门标签</span>
           <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
         </div>
-        <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info">{{ o.message }}</el-tag>
+        <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info"></el-tag>
       </el-card>
 
       <!--最热文章-->
@@ -29,7 +29,7 @@
           <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
         </div>
         <div v-for="o in cardData" :key="o.value" class="text item">
-          {{'列表内容 ' + o.message }}
+
         </div>
       </el-card>
 
@@ -40,7 +40,6 @@
           <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
         </div>
         <div v-for="o in cardData" :key="o.value" class="text item">
-          {{'列表内容 ' + o.message }}
         </div>
       </el-card>
     </div>
@@ -66,13 +65,13 @@
           if (response.data.code == '0') {
             that.blogs = response.data.data;
             console.log(response.data.data);
-              this.$message({
+              that.$message({
                 type: 'info',
                 message: response.data.message
               })
             console.log(response.data);
           } else {
-            this.$message({
+            that.$message({
               type: 'error',
               message: response.data.message
             })

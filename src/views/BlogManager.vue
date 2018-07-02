@@ -5,15 +5,15 @@
           <div>
             <router-link to="/blogEditor"><el-button id="button" type="danger">发布文章</el-button></router-link>
           </div>
-          <el-col :span="8" v-for="(o, index) in 16" :key="o.value" :offset="index > 0 ? 0 : 0">
+          <el-col :span="8" v-for="(o, index) in blogs" :key="o.value" :offset="index > 0 ? 0 : 0">
             <el-card :body-style="{ padding: '0px' }">
               <div style="padding: 14px;">
-                <router-link to="/blogDetail"><span>好吃的汉堡</span></router-link>
+                <router-link to="/blogDetail"><span v-text="o.title"></span></router-link>
                 <div class="bottom clearfix">
-                  <time class="time">{{ currentDate }}</time>
+                  <time class="time" v-text="$options.filters.formatDate(o.createTime)" style="color: red; float: left"></time>
                   <template>
-                    <el-button type="text" class="button">修改</el-button>
-                    <el-button type="text" @click="open" class="button">删除</el-button>
+                    <el-button type="text" class="button" @click="goUpdate(o.id)">修改</el-button>
+                    <el-button type="text" @click="goDelete(o.id)" class="button">删除</el-button>
                   </template>
                 </div>
               </div>
@@ -28,7 +28,7 @@
             <span><i class="el-icon-edit">&nbsp;&nbsp;</i>热门标签</span>
             <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
           </div>
-          <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info">{{ o.message }}</el-tag>
+          <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info"></el-tag>
         </el-card>
       </div>
     </div>
@@ -36,11 +36,14 @@
 
 <script>
   import BlogDetail from "./BlogDetail";
+  import {formatDate} from '../utils/date.js';
+
   export default {
     components: {BlogDetail},
+    inject: ['reload'],
     data() {
       return {
-        currentDate: new Date(),
+        blogs : '',
         cardData: [
           {
             message: '第一篇文章'
@@ -52,16 +55,31 @@
       };
     },
     methods: {
-      open() {
+      goDelete(val) {
+        let that = this;
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning',
           center: true
         }).then(() => {
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
+          this.$http.delete('/blog/delete/' + val, {})
+            .then(function (response) {
+              if (response.data.code == '0') {
+                that.$message({
+                  type: 'info',
+                  message: response.data.message
+                });
+                that.reload();
+                console.log(response.data);
+              } else {
+                that.$message({
+                  type: 'error',
+                  message: response.data.message
+                })
+              }
+            }).catch(function (error) {
+            console.log(error);
           });
         }).catch(() => {
           this.$message({
@@ -69,6 +87,49 @@
             message: '已取消删除'
           });
         });
+      },
+      goUpdate(val) {
+        this.$confirm('该操作将修改此文章, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          this.$router.push({name: "blogEditor", params: {id: val}});
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消该操作'
+          });
+        });
+      }
+    },
+    created: function() {
+      let that = this;
+      this.$http.get('/blog/findAllByUserId', {
+      }).then(function (response) {
+        if (response.data.code == '0') {
+          that.blogs = response.data.data;
+          console.log(response.data.data);
+          that.$message({
+            type: 'info',
+            message: response.data.message
+          })
+          console.log(response.data);
+        } else {
+          that.$message({
+            type: 'error',
+            message: response.data.message
+          })
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
+    filters: {
+      formatDate(time) {
+        var date = new Date(time);
+        return formatDate(date, "yyyy-MM-dd hh:mm");
       }
     }
   }

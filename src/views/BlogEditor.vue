@@ -39,8 +39,6 @@
 
 <script>
   import { quillEditor } from 'vue-quill-editor' //调用编辑器
-
-
   export default {
     data() {
       return {
@@ -199,9 +197,43 @@
       quillEditor
     },
     created: function() {
-      var blog = this.$route.params.blog;
+      let blog = this.$route.params.blog;
       if (blog) {
         this.infoForm = blog;
+      }
+      let id = this.$route.params.id;
+      if (id) {
+        let that = this;
+        this.$http.get('/blog/findOne/' + id, {}).then(function (response) {
+          if (response.data.code == '0') {
+            that.infoForm.id = response.data.data.blog.id;
+            that.infoForm.title = response.data.data.blog.title;
+            that.infoForm.description = response.data.data.blog.description;
+            that.infoForm.content = response.data.data.blog.content;
+            that.infoForm.category =  response.data.data.blog.category,
+            that.infoForm.createUser =  response.data.data.blog.createUser,
+            that.infoForm.updateUser =  response.data.data.blog.updateUser,
+            that.infoForm.createTime =  response.data.data.blog.createTime,
+            that.infoForm.updateTime =  response.data.data.blog.updateTime,
+            that.infoForm.createIp =  response.data.data.blog.createIp,
+            that.infoForm.updateIp =  response.data.data.blog.updateIp,
+            that.infoForm.status =  response.data.data.blog.status,
+            console.log(response.data.data);
+            that.$message({
+              type: 'info',
+              message: response.data.message
+            })
+            console.log(response.data);
+          } else {
+            that.$message({
+              type: 'error',
+              message: response.data.message
+            })
+          }
+        }).catch(function (error) {
+          loading.close();
+          console.log(error);
+        });
       }
     }
   }
