@@ -47,7 +47,7 @@
           if (!Number.isInteger(value)) {
             callback(new Error('请输入数字值'));
           } else {
-            if (value != 11) {
+            if (value.toString().length !== 11) {
               callback(new Error('请输入完整的手机号'));
             } else {
               callback();
@@ -59,9 +59,6 @@
         if (value === '') {
           callback(new Error('请输入昵称'));
         } else {
-          if (this.ruleForm.nickname !== '') {
-            this.$refs.ruleForm.validateField('nickname');
-          }
           callback();
         }
       };
@@ -72,7 +69,8 @@
         imageUrl: '',
         ruleForm: {
           mobile: '',
-          nickname: ''
+          nickname: '',
+          filePath: ''
         },
         rules: {
           nickname: [
@@ -86,11 +84,35 @@
     },
     methods: {
       submitForm(formName) {
+        let that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            this.$http.put('/user/update/', {
+              nickname : that.ruleForm.nickname,
+              mobile : that.ruleForm.mobile,
+              originPath : that.ruleForm.filePath
+            })
+              .then(function (response) {
+                if (response.data.code == '0') {
+                  that.$message({
+                    type: 'info',
+                    message: response.data.message
+                  });
+                  console.log(response.data);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              }).catch(function (error) {
+              console.log(error);
+            });
           } else {
-            console.log('error submit!!');
+            this.$message({
+              type: 'error',
+              message: "更新个人信息失败"
+            });
             return false;
           }
         });
@@ -100,6 +122,19 @@
       },
       handleAvatarSuccess(res, file) {
         this.imageUrl = URL.createObjectURL(file.raw);
+        if (res.code == '0') {
+          this.ruleForm.filePath = res.data;
+          alert(res.data.originPath);
+          this.$message({
+            type: 'info',
+            message: res.message
+          });
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.message
+          });
+        }
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
