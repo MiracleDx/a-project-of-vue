@@ -10,7 +10,9 @@
               <div style="padding: 14px;">
                 <router-link to="/blogDetail"><span v-text="o.title"></span></router-link>
                 <div class="bottom clearfix">
-                  <time class="time" v-text="$options.filters.formatDate(o.createTime)" style="color: red; float: left"></time>
+                  <div style="font-size: 5px"><span>点赞：</span><span style="color: red">{{ o.likeNumber | formatNumber }}</span></div>
+                  <div style="font-size: 5px"><span>回复：</span><span style="color: red">{{ o.replyNumber | formatNumber }}</span></div>
+                  <time class="time" v-text="$options.filters.formatDate(o.createTime)" style="color: red;"></time>
                   <template>
                     <el-button type="text" class="button" @click="goUpdate(o.id)">修改</el-button>
                     <el-button type="text" @click="goDelete(o.id)" class="button">删除</el-button>
@@ -130,6 +132,13 @@
       formatDate(time) {
         var date = new Date(time);
         return formatDate(date, "yyyy-MM-dd hh:mm");
+      },
+      formatNumber(number) {
+        if (number == null || number == undefined || number == '') {
+          return 0;
+        } else {
+          return number;
+        }
       }
     }
   }

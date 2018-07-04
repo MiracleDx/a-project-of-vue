@@ -74,7 +74,8 @@ export default {
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        'Content-Type': 'application/json;charset=utf-8',
+        'Content-Type': 'application/json;charset=utf-8;',
+        //'Content-Type':'multipart/form-data'
       }
     }).then(
       (response) => {

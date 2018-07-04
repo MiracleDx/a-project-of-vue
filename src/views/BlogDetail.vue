@@ -34,7 +34,7 @@
     </div>
 
     <div class="bottom">
-      <el-button type="danger" @click="changeStatus" class="button">{{ showZanStatus }}</el-button>
+      <el-button type="danger" @click="changeStatus" v-model="blog.isLike" class="button">{{ showZanStatus }}</el-button>
     </div>
 
     <br>
@@ -310,11 +310,11 @@
         },
         changeStatus() {
           let that = this;
-          if (this.showZan) {
+          if (this.blog.isLike == 0) {
             this.$http.get('/total/addStatus/' + this.blog.id, {})
               .then(function (response) {
                 if (response.data.code == '0') {
-                  that.blog.isLike = 0;
+                  that.blog.isLike = 1;
                   that.$message({
                     type: 'info',
                     message: response.data.message
@@ -333,7 +333,7 @@
             this.$http.get('/total/cancelStatus/' + this.blog.id, {})
               .then(function (response) {
                 if (response.data.code == '0') {
-                  that.blog.isLike = 1;
+                  that.blog.isLike = 0;
                   that.$message({
                     type: 'info',
                     message: response.data.message
@@ -356,7 +356,7 @@
           return this.$refs.myQuillEditor.quill
         },
         showZanStatus() {
-         return this.blog.isLike == 0 ? "点赞" : "取消点赞";
+          return this.blog.isLike == 0 ? "点赞" : "取消点赞";
         }
       },
       created: function() {
@@ -434,11 +434,6 @@
         formatDate(time) {
           var date = new Date(time);
           return formatDate(date, "yyyy-MM-dd hh:mm");
-        }
-      },
-      watch: {
-        showZanStatus(val) {
-          return this.blog.isLike = val;
         }
       }
     }

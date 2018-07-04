@@ -2,7 +2,13 @@
   <div id="info">
 
     <div id="app">
-      <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+      <el-upload class="avatar-uploader"
+                 :action="action"
+                 :headers="headers"
+                 :show-file-list="false"
+                 :on-success="handleAvatarSuccess"
+                 :before-upload="beforeAvatarUpload"
+                 :limit="1">
         <img v-if="imageUrl" :src="imageUrl" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
@@ -61,6 +67,8 @@
       };
 
       return {
+        headers: {},
+        action: "http://127.0.0.1:8180/user/avatarUpload",
         imageUrl: '',
         ruleForm: {
           mobile: '',
@@ -104,6 +112,12 @@
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
         return isJPG && isLt2M;
+      }
+    },
+    created: function() {
+      const token = localStorage.getItem('token');
+      this.headers = {
+        'Authorization' : 'yangxl ' + token
       }
     }
   }

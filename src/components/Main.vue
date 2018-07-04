@@ -6,7 +6,14 @@
         <el-collapse-item v-for="i in blogs" :key="i.value" :title=i.title :name=i.index>
           <div  @click="findOne(i.id)">
             <div v-show="i.description">描述：{{ i.description }}</div>
-            <div>发表于 <span style="color: red">{{ i.createTime | formatDate }}</span></div>
+            <div>
+              发表于：
+              <span style="color: red">{{ i.createTime | formatDate }}</span>&nbsp;
+              点赞：
+              <span style="color: red">{{ i.likeNumber }}</span>&nbsp;
+              回复：
+              <span style="color: red">{{ i.replyNumber }}</span>&nbsp;
+            </div>
           </div>
         </el-collapse-item>
       </el-collapse>
