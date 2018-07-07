@@ -10,9 +10,9 @@
               发表于：
               <span style="color: red">{{ i.createTime | formatDate }}</span>&nbsp;
               点赞：
-              <span style="color: red">{{ i.likeNumber }}</span>&nbsp;
+              <span style="color: red">{{ i.likeNumber ? i.likeNumber : 0 }}</span>&nbsp;
               回复：
-              <span style="color: red">{{ i.replyNumber }}</span>&nbsp;
+              <span style="color: red">{{ i.replyNumber ? i.replyNumber : 0 }}</span>&nbsp;
             </div>
           </div>
         </el-collapse-item>
@@ -24,16 +24,20 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span><i class="el-icon-edit">&nbsp;&nbsp;</i>热门标签</span>
-          <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
+          <el-button style="float: right; padding: 3px 0" type="text" @click="open">隐藏</el-button>
         </div>
-        <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info"></el-tag>
+        <el-tag>Spring Boot</el-tag>
+        <el-tag type="success">Spring Cloud</el-tag>
+        <el-tag type="info">Elasticsearch</el-tag>
+        <el-tag type="warning">JPA</el-tag>
+        <el-tag type="danger">Redis</el-tag>
       </el-card>
 
       <!--最热文章-->
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><i class="el-icon-edit"></i>最热文章</span>
-          <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
+          <span><i class="el-icon-edit">&nbsp;&nbsp;</i>最热文章</span>
+          <el-button style="float: right; padding: 3px 0" type="text" @click="open">隐藏</el-button>
         </div>
         <div v-for="o in cardData" :key="o.value" class="text item">
 
@@ -43,8 +47,8 @@
       <!--最新发布-->
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span><i class="el-icon-edit"></i>最新发布</span>
-          <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
+          <span><i class="el-icon-edit">&nbsp;&nbsp;</i>最新发布</span>
+          <el-button style="float: right; padding: 3px 0" type="text" @click="open">隐藏</el-button>
         </div>
         <div v-for="o in cardData" :key="o.value" class="text item">
         </div>
@@ -86,6 +90,8 @@
         }).catch(function (error) {
           console.log(error);
         });
+      // todo find top 5
+      // todo find new 5
     },
     methods: {
       findOne (val) {
@@ -97,6 +103,15 @@
             message: '没有访问权限'
           })
         }
+      },
+      open() {
+        this.$notify({
+          title: '略略略略',
+          message: '我就不隐藏',
+          position: 'top-left',
+          showClose: false,
+          duration: 5000
+        });
       }
     },
     filters: {

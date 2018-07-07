@@ -23,6 +23,12 @@ const store = new Vuex.Store({
       localStorage.setItem( 'mobile', user.mobile ? user.mobile : '');
       console.log('从登录中获取userInfo', user);
     },
+    refresh(state) {
+      state.user.username = localStorage.getItem('username') ? localStorage.getItem('username') : '';
+      state.user.avatar = localStorage.getItem('avatar') ? localStorage.getItem('avatar') : '';
+      state.user.mobile = localStorage.getItem('mobile') ? localStorage.getItem('mobile') : '';
+      console.log('刷新信息');
+    },
     // 修改登录状态
     changeLoginStatus(state, status) {
       state.isLogin = status;
@@ -44,6 +50,17 @@ const store = new Vuex.Store({
       state.user.avatar = '';
       state.user.mobile = '';
       console.log('清空登录信息');
+    }
+  },
+  getters: {
+    getUsername(state) {
+      return state.user.username;
+    },
+    getMobile(state) {
+      return state.user.mobile;
+    },
+    getAvatar(state) {
+      return state.user.avatar;
     }
   }
 })

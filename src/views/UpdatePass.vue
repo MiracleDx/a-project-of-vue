@@ -46,7 +46,7 @@
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'));
-        } else if (value !== this.ruleForm.pass) {
+        } else if (value !== this.ruleForm.password) {
           callback(new Error('两次输入密码不一致!'));
         } else {
           callback();
@@ -76,11 +76,44 @@
     },
     methods: {
       submitForm(formName) {
+        let that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            this.$http.put('/user/changePassword/', {
+              oldPassword : this.ruleForm.oldpass,
+              newPassword : this.ruleForm.password
+            })
+              .then(function (response) {
+                if (response.data.code == '0') {
+                  that.$message({
+                    type: 'info',
+                    message: response.data.message
+                  });
+
+                  that.$router.push('/login')
+                  localStorage.removeItem('token');
+                  localStorage.removeItem('username');
+                  localStorage.removeItem('avatar');
+                  localStorage.removeItem('mobile');
+                  that.$store.commit('checkStatus');
+                  that.$store.commit('changeLoginStatus', false);
+                  that.$store.commit('clearStatus');
+
+                  console.log(response.data);
+                } else {
+                  that.$message({
+                    type: 'error',
+                    message: response.data.message
+                  })
+                }
+              }).catch(function (error) {
+              console.log(error);
+            });
           } else {
-            console.log('error submit!!');
+            this.$message({
+              type: 'error',
+              message: "更新个人信息失败"
+            });
             return false;
           }
         });

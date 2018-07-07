@@ -46,7 +46,8 @@ export default {
       this.isLogin = this.$store.state.isLogin;
       this.$store.commit('changeLoginStatus', this.isLogin);
       this.$store.commit('clearStatus');
-      location.reload();
+      //location.reload();
+      this.$router.push("/");
     },
     goBack() {
       this.$router.go(-1);
@@ -58,11 +59,17 @@ export default {
   computed: {
     getLoginStatus() {
       return this.$store.state.isLogin;
+    },
+    getUsername() {
+      return this.$store.state.user.username;
     }
   },
   watch: {
     getLoginStatus(val) {
       this.isLogin = val;
+    },
+    getUsername(val) {
+      this.username = this.$store.state.user.username;
     }
   }
 }

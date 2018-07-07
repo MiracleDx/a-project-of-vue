@@ -8,6 +8,7 @@
                  :show-file-list="false"
                  :on-success="handleAvatarSuccess"
                  :before-upload="beforeAvatarUpload"
+                 :on-error="handleAvatarError"
                  :limit="1">
         <img v-if="imageUrl" :src="imageUrl" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -38,6 +39,7 @@
 
 <script>
   export default {
+    inject: ['reload'],
     data() {
       var checkMobile = (rule, value, callback) => {
         if (!value) {
@@ -69,8 +71,7 @@
         imageUrl: '',
         ruleForm: {
           mobile: '',
-          nickname: '',
-          filePath: ''
+          nickname: ''
         },
         rules: {
           nickname: [
@@ -90,10 +91,12 @@
             this.$http.put('/user/update/', {
               nickname : that.ruleForm.nickname,
               mobile : that.ruleForm.mobile,
-              originPath : that.ruleForm.filePath
             })
               .then(function (response) {
                 if (response.data.code == '0') {
+                  localStorage.setItem('username', response.data.data.nickname);
+                  localStorage.setItem('mobile', response.data.data.mobile);
+                  that.$store.commit('refresh');
                   that.$message({
                     type: 'info',
                     message: response.data.message
@@ -123,8 +126,8 @@
       handleAvatarSuccess(res, file) {
         this.imageUrl = URL.createObjectURL(file.raw);
         if (res.code == '0') {
-          this.ruleForm.filePath = res.data;
-          alert(res.data.originPath);
+          localStorage.setItem('avatar', res.data);
+          this.$store.commit('refresh');
           this.$message({
             type: 'info',
             message: res.message
@@ -133,6 +136,24 @@
           this.$message({
             type: 'error',
             message: res.message
+          });
+        }
+      },
+      handleAvatarError(res) {
+        if (res.status === 401) {
+          this.$message({
+            type: 'error',
+            message:'登录失效，请重新登录'
+          });
+        } else if (res.status === 403) {
+          this.$message({
+            type: 'error',
+            message:'没有访问权限'
+          });
+        } else {
+          this.$message({
+            type: 'error',
+            message:'系统错误，请联系管理员'
           });
         }
       },

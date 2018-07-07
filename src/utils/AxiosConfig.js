@@ -27,7 +27,6 @@ axios.interceptors.response.use(
   error => {
     if (error.response.status === 401) {
       Message.warning('登录失效，请重新登录').then((val) => {
-
       }).catch(() => {
         console.log('cancel');
       });
@@ -45,6 +44,16 @@ function checkStatus (response) {
     response.status === 400)) {
     return response;
   }
+  if (response.status === 401) {
+    Message.warning('登录失效，请重新登录').then((val) => {
+    }).catch(() => {
+      console.log('cancel');
+    });
+  } else if (response.status === 403) {
+    Message.warning('没有访问权限')
+  } else {
+    Message.error('系统错误，请联系管理员');
+  }
   // 异常状态下，把错误信息返回去
   return {
     status: -404,
@@ -54,11 +63,22 @@ function checkStatus (response) {
 
 function checkCode (res) {
   // 如果code异常(这里已经包括网络错误，服务器错误，后端抛出的错误)，可以弹出一个错误提示，告诉用户
-  if (res.status === -404) {
+ /* if (res.status === -404) {
     console.log(res.msg);
   }
   if (res.data && (!res.data.success)) {
     // alert(res.data.error_msg);
+  }*/
+
+  if (res.status === 401) {
+    Message.warning('登录失效，请重新登录').then((val) => {
+    }).catch(() => {
+      console.log('cancel');
+    });
+  } else if (res.status === 403) {
+    Message.warning('没有访问权限')
+  } else {
+    Message.error('系统错误，请联系管理员');
   }
   return res
 }

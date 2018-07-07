@@ -51,7 +51,7 @@
         isLogin: '',
         user: {
           username: this.$store.state.user.username,
-          avatar: this.$store.state.user.avatar,
+          avatar: this.$store.getters.getAvatar,
           mobile: this.$store.state.user.mobile
         }
       };
@@ -63,7 +63,30 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       }
-    }
+    },
+    computed: {
+      getUsername() {
+        return this.$store.state.user.username;
+      },
+      getAvatar() {
+        return this.$store.state.user.avatar;
+      },
+      getMobile() {
+        return this.$store.state.user.mobile;
+      }
+    },
+    watch: {
+      getUsername() {
+        this.user.username = this.$store.state.user.username;
+      },
+      getAvatar(val) {
+        this.user.avatar = this.$store.state.user.avatar;
+      }
+      ,
+      getMobile() {
+        this.user.mobile = this.$store.state.user.mobile;
+      }
+  }
   }
 </script>
 

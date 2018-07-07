@@ -7,7 +7,7 @@
         <el-input v-model="formLabelAlign.username"></el-input>
       </el-form-item>
       <el-form-item label="密码">
-        <el-input v-model="formLabelAlign.password"></el-input>
+        <el-input  type="password" v-model="formLabelAlign.password"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">登录</el-button>
@@ -41,7 +41,6 @@ export default {
         loading.close();
       }, 3000);
 
-
       let that = this;
       this.$http.post('/authlogin', {
           username: this.formLabelAlign.username,
@@ -63,6 +62,11 @@ export default {
                 console.log(error);
               });
             that.$router.push("/");
+          } else {
+            that.$message({
+              type: 'error',
+              message:response.data.message
+            });
           }
           console.log(response);
         })
