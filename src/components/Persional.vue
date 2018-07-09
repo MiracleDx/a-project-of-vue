@@ -26,18 +26,18 @@
               </router-link>
             </el-menu-item-group>
           </el-submenu>
-          <el-menu-item index="2">
             <router-link to="/blogManager">
-              <i class="el-icon-document"></i>
+              <el-menu-item index="2">
+                <i class="el-icon-document"></i>
+                <span slot="title">文章管理</span>
+              </el-menu-item>
             </router-link>
-              <span slot="title">文章管理</span>
-          </el-menu-item>
-          <el-menu-item index="3">
             <router-link to="/commentManager">
-              <i class="el-icon-setting"></i>
+              <el-menu-item index="3">
+                <i class="el-icon-setting"></i>
+                <span slot="title">评论管理</span>
+              </el-menu-item>
             </router-link>
-              <span slot="title">评论管理</span>
-          </el-menu-item>
         </el-menu>
       </div>
     </div>

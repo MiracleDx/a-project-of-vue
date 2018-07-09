@@ -10,8 +10,8 @@
               <div style="padding: 14px;">
                 <router-link to="/blogDetail"><span v-text="o.title"></span></router-link>
                 <div class="bottom clearfix">
-                  <div style="font-size: 5px"><span>点赞：</span><span style="color: red">{{ o.likeNumber | formatNumber }}</span></div>
-                  <div style="font-size: 5px"><span>回复：</span><span style="color: red">{{ o.replyNumber | formatNumber }}</span></div>
+                  <div style="font-size: 5px"><span>点赞：</span><span style="color: red">{{ o.likeNumber | formatNumber }} </span></div>
+                  <div style="font-size: 5px"><span>&nbsp;&nbsp;回复：</span><span style="color: red">{{ o.replyNumber | formatNumber }}</span></div>
                   <time class="time" v-text="$options.filters.formatDate(o.createTime)" style="color: red;"></time>
                   <template>
                     <el-button type="text" class="button" @click="goUpdate(o.id)">修改</el-button>
@@ -30,7 +30,11 @@
             <span><i class="el-icon-edit">&nbsp;&nbsp;</i>热门标签</span>
             <el-button style="float: right; padding: 3px 0" type="text">隐藏</el-button>
           </div>
-          <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info"></el-tag>
+          <el-tag>Spring Boot</el-tag>
+          <el-tag type="success">Spring Cloud</el-tag>
+          <el-tag type="info">ElasticSearch</el-tag>
+          <el-tag type="warning">JPA</el-tag>
+          <el-tag type="danger">Redis</el-tag>
         </el-card>
       </div>
     </div>

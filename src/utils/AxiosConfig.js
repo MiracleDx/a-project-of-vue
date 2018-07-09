@@ -70,7 +70,7 @@ function checkCode (res) {
     // alert(res.data.error_msg);
   }*/
 
-  if (res.status === 401) {
+  /*if (res.status === 401) {
     Message.warning('登录失效，请重新登录').then((val) => {
     }).catch(() => {
       console.log('cancel');
@@ -79,7 +79,7 @@ function checkCode (res) {
     Message.warning('没有访问权限')
   } else {
     Message.error('系统错误，请联系管理员');
-  }
+  }*/
   return res
 }
 // 请求方式的配置

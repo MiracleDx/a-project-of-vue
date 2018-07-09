@@ -26,11 +26,11 @@
           <span><i class="el-icon-edit">&nbsp;&nbsp;</i>热门标签</span>
           <el-button style="float: right; padding: 3px 0" type="text" @click="open">隐藏</el-button>
         </div>
-        <el-tag>Spring Boot</el-tag>
-        <el-tag type="success">Spring Cloud</el-tag>
-        <el-tag type="info">Elasticsearch</el-tag>
-        <el-tag type="warning">JPA</el-tag>
-        <el-tag type="danger">Redis</el-tag>
+        <span @click="openHei"><el-tag>Spring Boot</el-tag></span>
+        <span @click="openHei"><el-tag @click="openHei" type="success">Spring Cloud</el-tag></span>
+        <span @click="openHei"><el-tag @click="openHei" type="info">ElasticSearch</el-tag></span>
+        <span @click="openHei"><el-tag @click="openHei" type="warning">JPA</el-tag></span>
+        <span @click="openHei"><el-tag @click="openHei" type="danger">Redis</el-tag></span>
       </el-card>
 
       <!--最热文章-->
@@ -64,6 +64,7 @@
   export default {
     data () {
       return {
+        count: 0,
         activeName: '1',
         blogs: [],
         cardData: []
@@ -112,6 +113,42 @@
           showClose: false,
           duration: 5000
         });
+      },
+      openHei() {
+        this.count ++;
+        let str = '';
+        if (this.count == 1) {
+          str = '我没有内容哟'
+        }
+        if (this.count == 2) {
+          str = '我也没有内容'
+        }
+        if (this.count == 3) {
+          str = '我还是没有内容'
+        }
+        if (this.count == 4) {
+          str = '我真的没有内容'
+        }
+        if (this.count == 5) {
+          str = '你怎么就不信邪呢'
+        }
+        if (this.count >= 6) {
+          str = '点，可劲儿点，反正我什么也没有'
+        }
+        if (str != '') {
+          this.$alert('<strong style="color: red;">' + str + '</strong>', '', {
+            center: true,
+            dangerouslyUseHTMLString: true,
+            showClose: false,
+            confirmButtonText: '确定',
+            /*callback: action => {
+              this.$message({
+                type: 'info',
+                message: str
+              });
+            }*/
+          });
+        }
       }
     },
     filters: {

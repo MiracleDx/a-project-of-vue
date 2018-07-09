@@ -174,7 +174,20 @@
       const token = localStorage.getItem('token');
       this.headers = {
         'Authorization' : 'yangxl ' + token
-      }
+      };
+      let that = this;
+      this.$http.get('/user/getNicknameAndMobile/', {})
+        .then(function (response) {
+          if (response.data.code == '0') {
+            that.ruleForm.nickname = response.data.data.nickname;
+            that.ruleForm.mobile = response.data.data.mobile;
+            console.log(response.data);
+          } else {
+            console.log(response);
+          }
+        }).catch(function (error) {
+        console.log(error);
+      });
     }
   }
 </script>
