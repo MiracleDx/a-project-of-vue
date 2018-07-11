@@ -39,8 +39,8 @@
           <span><i class="el-icon-edit">&nbsp;&nbsp;</i>最热文章</span>
           <el-button style="float: right; padding: 3px 0" type="text" @click="open">隐藏</el-button>
         </div>
-        <div v-for="o in cardData" :key="o.value" class="text item">
-
+        <div v-for="o in topFives" :key="o.value" class="text item">
+          <span @click="findOne(o.id)">{{ o.title }}</span>
         </div>
       </el-card>
 
@@ -50,7 +50,8 @@
           <span><i class="el-icon-edit">&nbsp;&nbsp;</i>最新发布</span>
           <el-button style="float: right; padding: 3px 0" type="text" @click="open">隐藏</el-button>
         </div>
-        <div v-for="o in cardData" :key="o.value" class="text item">
+        <div v-for="o in newFives" :key="o.value" class="text item">
+          <span @click="findOne(o.id)">{{ o.title }}</span>
         </div>
       </el-card>
     </div>
@@ -67,32 +68,41 @@
         count: 0,
         activeName: '1',
         blogs: [],
-        cardData: []
+        topFives: [],
+        newFives: []
       }
     },
     created: function () {
       let that = this;
-      this.$http.get('/findAllBlog', {
+      this.$http.get('/es/findAll', {
         }).then(function (response) {
           if (response.data.code == '0') {
-            that.blogs = response.data.data;
+            that.blogs = response.data.data.content;
             console.log(response.data.data);
-              that.$message({
-                type: 'info',
-                message: response.data.message
-              })
-            console.log(response.data);
-          } else {
-            that.$message({
-              type: 'error',
-              message: response.data.message
-            })
           }
         }).catch(function (error) {
           console.log(error);
         });
-      // todo find top 5
-      // todo find new 5
+      // find top 5
+      this.$http.get('/es/findTopFive', {
+      }).then(function (response) {
+        if (response.data.code == '0') {
+          that.topFives = response.data.data;
+          console.log(response.data.data);
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
+      // find new 5
+      this.$http.get('/es/findNewFive', {
+      }).then(function (response) {
+        if (response.data.code == '0') {
+          that.newFives = response.data.data;
+          console.log(response.data.data);
+        }
+      }).catch(function (error) {
+        console.log(error);
+      });
     },
     methods: {
       findOne (val) {
@@ -154,7 +164,17 @@
     filters: {
       formatDate(time) {
         var date = new Date(time);
-        return formatDate(date, "yyyy-MM-dd hh:mm");
+        return formatDate(date, "yyyy-MM-dd hh:mm:ss");
+      }
+    },
+    computed: {
+      getBlogs() {
+        return this.$store.state.blogs;
+      }
+    },
+    watch:  {
+      getBlogs() {
+        this.blogs = this.$store.state.blogs;
       }
     }
   }

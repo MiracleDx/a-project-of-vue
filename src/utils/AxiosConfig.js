@@ -27,6 +27,10 @@ axios.interceptors.response.use(
   error => {
     if (error.response.status === 401) {
       Message.warning('登录失效，请重新登录').then((val) => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('avatar');
+        localStorage.removeItem('mobile');
       }).catch(() => {
         console.log('cancel');
       });
@@ -46,6 +50,10 @@ function checkStatus (response) {
   }
   if (response.status === 401) {
     Message.warning('登录失效，请重新登录').then((val) => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('avatar');
+      localStorage.removeItem('mobile');
     }).catch(() => {
       console.log('cancel');
     });

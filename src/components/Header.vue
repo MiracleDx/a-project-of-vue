@@ -4,8 +4,8 @@
       <el-button type="info" @click="goBack">后退</el-button>
       <router-link to="/"><el-button type="info">主页</el-button></router-link>
       <el-button type="info" @click="goForward">前进</el-button>
-      <el-input placeholder="请输入内容" v-model="inputsearch" clearable></el-input>
-      <el-button icon="el-icon-search" circle></el-button>
+      <el-input placeholder="请输入内容" v-model="keyword" clearable></el-input>
+      <el-button icon="el-icon-search" circle  @click="findBykeyword"></el-button>
     </div>
     <div id="right">
       <router-link v-show="!isLogin" to="/login"><el-button type="primary">登录</el-button></router-link>
@@ -33,7 +33,7 @@ export default {
     return {
       isLogin: this.$store.state.isLogin,
       username: this.$store.state.user.username,
-      inputsearch: ''
+      keyword: '',
     }
   },
   methods: {
@@ -54,6 +54,30 @@ export default {
     },
     goForward() {
       this.$router.go(1);
+    },
+    findBykeyword() {
+      let that = this;
+      this.$http.get('/es/findByKeyword', {
+        keyword : this.keyword
+      })
+        .then(function (response) {
+          if (response.data.code == '0') {
+            that.$message({
+              type: 'success',
+              message: response.data.message
+            })
+            that.$store.state.blogs = response.data.data;
+            console.log(response);
+          } else {
+            that.$message({
+              type: 'error',
+              message: response.data.message
+            })
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   },
   computed: {

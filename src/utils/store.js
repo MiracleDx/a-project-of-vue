@@ -10,7 +10,8 @@ const store = new Vuex.Store({
       username: localStorage.getItem('username') ? localStorage.getItem('username') : '',
       avatar: localStorage.getItem('avatar') ? localStorage.getItem('avatar') : '',
       mobile: localStorage.getItem('mobile') ? localStorage.getItem('mobile') : '',
-    }
+    },
+    blogs: []
   },
   mutations: {
     // 从登录中获取用户信息
