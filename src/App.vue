@@ -1,25 +1,28 @@
 <template>
-  <el-container>
-    <!--头部-->
-    <el-header>
-      <Header></Header>
-    </el-header>
+    <div :xs="4" :sm="6" :md="8" :lg="9" :xl="11">
+        <el-container>
+          <!--头部-->
+          <el-header>
+            <Header></Header>
+          </el-header>
 
-    <el-container>
-      <el-aside v-show="isLogin">
-        <Persional></Persional>
-      </el-aside>
-      <el-main>
-        <router-view v-if="isRouterAlive"></router-view>
-      </el-main>
-    </el-container>
+          <el-container>
+            <el-aside v-show="isLogin">
+              <Persional></Persional>
+            </el-aside>
+            <el-main>
+               <router-view v-if="isRouterAlive"></router-view>
+            </el-main>
+          </el-container>
 
-    <!--脚部-->
-   <!-- <el-footer>
-      <Footer></Footer>
-    </el-footer>-->
+          <!--脚部-->
+         <!-- <el-footer>
+            <Footer></Footer>
+          </el-footer>-->
 
-  </el-container>
+          <Footer class="myFoot"></Footer>
+        </el-container>
+    </div>
 </template>
 
 <script>
@@ -46,8 +49,8 @@ export default {
     }
   },
   watch: {
-    getLoginStatus(val) {
-      this.isLogin = val;
+    getLoginStatus() {
+      this.isLogin = this.$store.state.isLogin;
     }
   },
   methods: {
@@ -92,8 +95,8 @@ console.log("我还是喜欢着你.");
   }
 
   .el-footer {
-    background-color: #66CCFF;
-    text-align: center;
+    /*background-color: #66CCFF;*/
+    text-align: right;
     line-height: 60px;
   }
 
@@ -122,11 +125,6 @@ console.log("我还是喜欢着你.");
     margin-bottom: 10px;
   }
 
-  .el-footer {
-    background-color: #66CCFF;
-    text-align: center;
-    line-height: 60px;
-  }
 
   a {
     text-decoration: none;
@@ -136,5 +134,19 @@ console.log("我还是喜欢着你.");
     height: 30px;
     line-height: 30px;
     margin: 0 10px;
+  }
+
+  .myFoot {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .el-scrollbar__wrap {
+    overflow-x: hidden;
+  }
+
+  .live-scrollbar {
+    height: 100%;
   }
 </style>

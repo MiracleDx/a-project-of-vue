@@ -2,13 +2,13 @@
     <div class="blogManager">
       <div id="left">
         <el-row>
-          <div>
+          <div v-show="isShow">
             <router-link to="/blogEditor"><el-button id="button" type="danger">发布文章</el-button></router-link>
           </div>
           <el-col :span="8" v-for="(o, index) in blogs" :key="o.value" :offset="index > 0 ? 0 : 0">
             <el-card :body-style="{ padding: '0px' }">
               <div style="padding: 14px;">
-                <router-link to="/blogDetail"><span v-text="o.title"></span></router-link>
+              <span v-text="o.title" @click="findOne(o.id)" style="color: #66ccff"></span>
                 <div class="bottom clearfix">
                   <div style="font-size: 5px"><span>点赞：</span><span style="color: red">{{ o.likeNumber | formatNumber }} </span></div>
                   <div style="font-size: 5px"><span>&nbsp;&nbsp;回复：</span><span style="color: red">{{ o.replyNumber | formatNumber }}</span></div>
@@ -24,7 +24,7 @@
         </el-row>
       </div>
 
-      <div id="right">
+      <div id="right" v-show="isShow">
         <el-card class="box-card">
           <div slot="header" class="clearfix">
             <span><i class="el-icon-edit">&nbsp;&nbsp;</i>热门标签</span>
@@ -49,18 +49,21 @@
     inject: ['reload'],
     data() {
       return {
-        blogs : '',
-        cardData: [
-          {
-            message: '第一篇文章'
-          },
-          {
-            message: '第二篇文章'
-          }
-        ]
+        blogs: '',
+        isShow: false
       };
     },
     methods: {
+      findOne (val) {
+        if (localStorage.getItem('token')) {
+          this.$router.push({name: "blogDetail", params: {id: val}});
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '没有访问权限'
+          })
+        }
+      },
       goDelete(val) {
         let that = this;
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -121,6 +124,7 @@
             type: 'info',
             message: response.data.message
           })
+          that.isShow = true;
           console.log(response.data);
         } else {
           that.$message({

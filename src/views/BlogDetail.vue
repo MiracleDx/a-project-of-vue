@@ -1,6 +1,6 @@
 <template>
   <div class="detail" v-show="this.blog.id">
-
+    <el-scrollbar class="live-scrollbar">
     <div id="title">
       <div id="left">
         <div>
@@ -30,11 +30,15 @@
 
     <div id="category">
       <span>标签:</span>
-      <el-tag class="tag" v-for="o in cardData" :key="o.value" type="info">{{ o.message }}</el-tag>
+      <span ><el-tag>Spring Boot</el-tag></span>
+      <span ><el-tag type="success">Spring Cloud</el-tag></span>
+      <span ><el-tag type="info">ElasticSearch</el-tag></span>
+      <span ><el-tag type="warning">JPA</el-tag></span>
+      <span ><el-tag type="danger">Redis</el-tag></span>
     </div>
 
     <div class="bottom">
-      <el-button type="danger" @click="changeStatus" v-model="blog.isLike" class="button">{{ showZanStatus }}</el-button>
+        <el-button type="danger" @click="changeStatus" v-model="blog.isLike" class="button">{{ showZanStatus }}</el-button>
     </div>
 
     <br>
@@ -63,7 +67,7 @@
     <br>
     <br>
 
-    <div id="commentDetail" v-for="i in comment">
+    <div id="commentDetail" v-for="i in comment.slice((currentPage-1)*pagesize, currentPage*pagesize)">
       <div id="commentLeft">
         <img :src="i.avatar" style="width: 50px; float: left">
         <div id="commentRight">
@@ -77,8 +81,8 @@
             <span @click.left="showMyComment(i)" @click.middle="showInput(i)" style="color: #66ccff; float: right; font-size: 5px;">我也想说一句{{ showCount(i.children) }}</span>
           </el-tooltip>
           <br><br><br><br>
-          <div id="children" style="margin: 0px; padding: 0px;">
-            <ul v-show="i.isDisplay" style="text-align: left; margin-left: 30%; display: block" v-for="c in i.children">
+          <div id="children" v-show="i.isDisplay" style="margin: 0px; padding: 0px;">
+            <ul style="text-align: left; margin-left: 30%; display: block" v-for="c in i.children.slice((commentChildren.currentPage-1)*commentChildren.pagesize, commentChildren.currentPage*commentChildren.pagesize)">
               <li>{{ selectUsername(c) }} : <span v-show="c.replyUsername">回复 {{ c.replyNickname ? c.replyNickname : c.replyUsername }} :</span>
                 {{ c.content }}
                 <span class="el-icon-delete" @click="deleteComment(c)" style="color: #66ccff; float: right; font-size: 5px;"></span>
@@ -90,11 +94,33 @@
               </li>
               <li style="color: #8cc5ff">-----</li>
             </ul>
+            <el-pagination v-show="i.children.length > 5"
+              small
+              layout="total, sizes, prev, pager, next, jumper"
+              :current-page="commentChildren.currentPage"
+              :page-sizes="[5, 10, 15, 20]"
+              :page-size="commentChildren.pagesize"
+              :total="i.children.length"
+              @size-change="handleChildrenSizeChange"
+              @current-change="handleChildrenCurrentChange"
+              style="text-align: right;">
+            </el-pagination>
           </div>
         </div>
       </div>
     </div>
-
+    <el-pagination v-show="comment.length > 5"
+      small
+      layout="total, sizes, prev, pager, next, jumper"
+      :current-page="currentPage"
+      :page-sizes="[5, 10, 15, 20]"
+      :page-size="pagesize"
+      :total="comment.length"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange">
+    </el-pagination>
+    <br>
+    </el-scrollbar>
   </div>
 </template>
 
@@ -110,20 +136,18 @@
           user: '',
           blog: {},
           comment: [],
-          cardData: [
-            {
-              message: '第一篇文章'
-            },
-            {
-              message: '第二篇文章'
-            }
-          ],
           commentCentent: '',
           isLike: true,
           show: false,
           commentShow: true,
           input: '',
-          index: ''
+          index: '',
+          pagesize: 5,//每页的数据条数
+          currentPage: 1,//默认开始页面
+          commentChildren: {
+            pagesize: 5,//每页的数据条数
+            currentPage: 1//默认开始页面
+          }
         }
       },
       methods: {
@@ -349,7 +373,19 @@
               console.log(error);
             });
           }
-        }
+        },
+        handleSizeChange(val) {
+          this.pagesize = val;
+        },
+        handleCurrentChange(val) {
+          this.currentPage = val;
+        },
+        handleChildrenSizeChange(val) {
+          this.commentChildren.pagesize = val;
+        },
+        handleChildrenCurrentChange(val) {
+          this.commentChildren.currentPage = val;
+        },
       },
       computed: {
         editor() {
@@ -445,6 +481,7 @@
     width: 75%;
     margin: 0 auto;
     border: 1px solid #5daf34;
+    height: 768px;
   }
 
   .detail #title {

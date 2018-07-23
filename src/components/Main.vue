@@ -1,9 +1,9 @@
 <template>
-  <el-main>
-    <div id="left">
+<el-main>
+  <div id="left">
       <!--文章列表-->
       <el-collapse v-model="activeName" accordion>
-        <el-collapse-item v-for="i in blogs" :key="i.value" :title=i.title :name=i.index>
+        <el-collapse-item v-for="i in blogs.slice((currentPage-1)*pagesize, currentPage*pagesize)" :key="i.value" :title=i.title :name=i.index>
           <div  @click="findOne(i.id)">
             <div v-show="i.description">描述：{{ i.description }}</div>
             <div>
@@ -17,6 +17,16 @@
           </div>
         </el-collapse-item>
       </el-collapse>
+      <el-pagination v-show="blogs.length > 5"
+        small
+        layout="total, sizes, prev, pager, next, jumper"
+        :current-page="currentPage"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pagesize"
+        :total="blogs.length"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange">
+      </el-pagination>
     </div>
 
     <div id="right">
@@ -27,10 +37,10 @@
           <el-button style="float: right; padding: 3px 0" type="text" @click="open">隐藏</el-button>
         </div>
         <span @click="openHei"><el-tag>Spring Boot</el-tag></span>
-        <span @click="openHei"><el-tag @click="openHei" type="success">Spring Cloud</el-tag></span>
-        <span @click="openHei"><el-tag @click="openHei" type="info">ElasticSearch</el-tag></span>
-        <span @click="openHei"><el-tag @click="openHei" type="warning">JPA</el-tag></span>
-        <span @click="openHei"><el-tag @click="openHei" type="danger">Redis</el-tag></span>
+        <span @click="openHei"><el-tag type="success">Spring Cloud</el-tag></span>
+        <span @click="openHei"><el-tag type="info">ElasticSearch</el-tag></span>
+        <span @click="openHei"><el-tag type="warning">JPA</el-tag></span>
+        <span @click="openHei"><el-tag type="danger">Redis</el-tag></span>
       </el-card>
 
       <!--最热文章-->
@@ -69,7 +79,9 @@
         activeName: '1',
         blogs: [],
         topFives: [],
-        newFives: []
+        newFives: [],
+        pagesize: 5,//每页的数据条数
+        currentPage: 1//默认开始页面
       }
     },
     created: function () {
@@ -159,7 +171,13 @@
             }*/
           });
         }
-      }
+      },
+      handleSizeChange(val) {
+        this.pagesize = val;
+      },
+      handleCurrentChange(val) {
+        this.currentPage = val;
+      },
     },
     filters: {
       formatDate(time) {

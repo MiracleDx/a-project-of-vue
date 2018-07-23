@@ -11,7 +11,7 @@ axios.interceptors.request.use(
     const token = localStorage.getItem('token');
     if (token) {
       //  存在将token写入 request header
-      config.headers.common['Authorization'] = 'yangxl ' + token;
+      config.headers.common['Authorization'] = token;
   }
   console.log(config)
   return config;
@@ -22,20 +22,21 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   response => {
+    if (response.headers.refresh_token !== '' && response.headers.refresh_token !== undefined) {
+      localStorage.setItem('token', response.headers.refresh_token);
+      console.log("更新token有效期");
+    }
     return response
 },
   error => {
     if (error.response.status === 401) {
-      Message.warning('登录失效，请重新登录').then((val) => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        localStorage.removeItem('avatar');
-        localStorage.removeItem('mobile');
-      }).catch(() => {
-        console.log('cancel');
-      });
+      Message.warning('该登录token已失效，请重新登录');
+      localStorage.removeItem('token');
+      localStorage.removeItem('username');
+      localStorage.removeItem('avatar');
+      localStorage.removeItem('mobile');
     } else if (error.response.status === 403) {
-      Message.warning('没有访问权限')
+      Message.warning('没有访问权限');
     } else {
       Message.error('系统错误，请联系管理员');
     }
@@ -49,14 +50,11 @@ function checkStatus (response) {
     return response;
   }
   if (response.status === 401) {
-    Message.warning('登录失效，请重新登录').then((val) => {
-      localStorage.removeItem('token');
-      localStorage.removeItem('username');
-      localStorage.removeItem('avatar');
-      localStorage.removeItem('mobile');
-    }).catch(() => {
-      console.log('cancel');
-    });
+    Message.warning('该登录token已失效，请重新登录');
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    localStorage.removeItem('avatar');
+    localStorage.removeItem('mobile');
   } else if (response.status === 403) {
     Message.warning('没有访问权限')
   } else {
@@ -95,7 +93,7 @@ export default {
   post (url, data) {  //  post
     return axios({
       method: 'post',
-      baseURL: 'http://127.0.0.1:8180/',
+      baseURL: 'http://192.168.1.132:8180/',
       url,
       data: JSON.stringify(data),
       timeout: 50000,
@@ -118,7 +116,7 @@ export default {
   get (url, params) {  // get
     return axios({
       method: 'get',
-      baseURL: 'http://127.0.0.1:8180/',
+      baseURL: 'http://192.168.1.132:8180/',
       url,
       params, // get 请求时带的参数
       timeout: 50000,
@@ -139,7 +137,7 @@ export default {
   put (url, data) {  // put
     return axios({
       method: 'put',
-      baseURL: 'http://127.0.0.1:8180/',
+      baseURL: 'http://192.168.1.132:8180/',
       url,
       data: JSON.stringify(data),
       timeout: 50000,
@@ -161,7 +159,7 @@ export default {
   delete (url, params) {  // delete
     return axios({
       method: 'delete',
-      baseURL: 'http://127.0.0.1:8180/',
+      baseURL: 'http://192.168.1.132:8180/',
       url,
       params, // get 请求时带的参数
       timeout: 50000,
