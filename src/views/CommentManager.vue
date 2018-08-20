@@ -32,7 +32,7 @@
     },
     methods: {
       handleChange(val) {
-        console.log(val);
+        //console.log(val);
       },
       splitStr(val) {
         if (val.indexOf("<") > -1) {
@@ -67,7 +67,7 @@
                   message: response.data.message
                 });
                 that.reload();
-                console.log(response.data);
+                //console.log(response.data);
               } else {
                 that.$message({
                   type: 'error',
@@ -75,7 +75,7 @@
                 })
               }
             }).catch(function (error) {
-            console.log(error);
+            //console.log(error);
           });
         }).catch(() => {
           this.$message({
@@ -91,12 +91,12 @@
       }).then(function (response) {
         if (response.data.code == '0') {
           that.comments = response.data.data;
-          console.log(response.data.data);
+          //console.log(response.data.data);
           that.$message({
             type: 'info',
             message: response.data.message
           })
-          console.log(response.data);
+          //console.log(response.data);
         } else {
           that.$message({
             type: 'error',
@@ -104,7 +104,7 @@
           })
         }
       }).catch(function (error) {
-        console.log(error);
+        //console.log(error);
       });
     },
    filters: {

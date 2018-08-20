@@ -99,7 +99,7 @@
                     message: response.data.message
                   })
                   that.$router.push('/login')
-                  console.log(response);
+                  //console.log(response);
                 } else {
                   that.$message({
                     type: 'error',
@@ -108,10 +108,10 @@
                 }
               })
               .catch(function (error) {
-                console.log(error);
+                //console.log(error);
               });
           } else {
-            console.log('error submit!!');
+            //console.log('error submit!!');
           }
         });
       },

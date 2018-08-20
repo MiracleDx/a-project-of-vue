@@ -62,7 +62,7 @@ export default {
             that.$store.commit('clearStatus');
             that.reload();
             that.$router.push("/");
-            console.log(response);
+            //console.log(response);
           } else {
             that.$message({
               type: 'error',
@@ -71,7 +71,7 @@ export default {
           }
         })
         .catch(function (error) {
-          console.log(error);
+          //console.log(error);
         });
     },
     goBack() {
@@ -98,7 +98,7 @@ export default {
               message: response.data.message
             })
             that.$store.state.blogs = response.data.data;
-            console.log(response);
+            //console.log(response);
           } else {
             that.$message({
               type: 'error',
@@ -107,7 +107,7 @@ export default {
           }
         })
         .catch(function (error) {
-          console.log(error);
+          //console.log(error);
         });
       }
     },

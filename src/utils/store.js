@@ -22,18 +22,18 @@ const store = new Vuex.Store({
       localStorage.setItem('username', user.nickname ? user.nickname : user.username);
       localStorage.setItem('avatar', user.avatar);
       localStorage.setItem( 'mobile', user.mobile ? user.mobile : '');
-      console.log('从登录中获取userInfo', user);
+      //console.log('从登录中获取userInfo', user);
     },
     refresh(state) {
       state.user.username = localStorage.getItem('username') ? localStorage.getItem('username') : '';
       state.user.avatar = localStorage.getItem('avatar') ? localStorage.getItem('avatar') : '';
       state.user.mobile = localStorage.getItem('mobile') ? localStorage.getItem('mobile') : '';
-      console.log('刷新信息');
+      //console.log('刷新信息');
     },
     // 修改登录状态
     changeLoginStatus(state, status) {
       state.isLogin = status;
-      console.log('修改登录状态：', status)
+      //console.log('修改登录状态：', status)
     },
     // 如果有token说明是已登录状态
     checkStatus(state) {
@@ -42,7 +42,7 @@ const store = new Vuex.Store({
       } else {
         state.isLogin = false;
       }
-      console.log('校验登录状态');
+      //console.log('校验登录状态');
     },
     // 清除登录信息
     clearStatus(state) {
@@ -50,7 +50,7 @@ const store = new Vuex.Store({
       state.user.username = '';
       state.user.avatar = '';
       state.user.mobile = '';
-      console.log('清空登录信息');
+      //console.log('清空登录信息');
     }
   },
   getters: {

@@ -63,7 +63,8 @@ export default {
   }
 }
 
-console.log("我还是喜欢着你.");
+console.log("独自缓慢成长的过程， 脑子累， 心累.");
+console.log("需要一个快速成长的机会.");
 </script>
 
 <style>

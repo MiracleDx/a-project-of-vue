@@ -56,10 +56,10 @@ export default {
                   that.$store.commit('checkStatus');
                   location.reload();
                 }
-                console.log(response);
+                //console.log(response);
             })
               .catch(function (error) {
-                console.log(error);
+                //console.log(error);
               });
             that.$router.push("/");
           } else {
@@ -68,10 +68,10 @@ export default {
               message:response.data.message
             });
           }
-          console.log(response);
+          //console.log(response);
         })
         .catch(function (error) {
-          console.log(error);
+          //console.log(error);
         });
     }
   }

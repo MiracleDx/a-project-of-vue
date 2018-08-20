@@ -116,7 +116,7 @@
                     type: 'info',
                     message: response.data.message
                   })
-                  console.log(response.data);
+                  //console.log(response.data);
                 } else {
                   that.$message({
                     type: 'error',
@@ -124,7 +124,7 @@
                   })
                 }
               }).catch(function (error) {
-                console.log(error);
+                //console.log(error);
               });
             } else {
               url = '/blog/update';
@@ -159,7 +159,7 @@
                       type: 'info',
                       message: response.data.message
                     })
-                  console.log(response.data);
+                  //console.log(response.data);
                 } else {
                   that.$message({
                     type: 'error',
@@ -167,7 +167,7 @@
                   })
                 }
               }).catch(function (error) {
-                console.log(error);
+                //console.log(error);
               });
             }
           }
@@ -218,12 +218,12 @@
             that.infoForm.createIp =  response.data.data.blog.createIp,
             that.infoForm.updateIp =  response.data.data.blog.updateIp,
             that.infoForm.status =  response.data.data.blog.status,
-            console.log(response.data.data);
+            //console.log(response.data.data);
             that.$message({
               type: 'info',
               message: response.data.message
             })
-            console.log(response.data);
+            //console.log(response.data);
           } else {
             that.$message({
               type: 'error',
@@ -232,7 +232,7 @@
           }
         }).catch(function (error) {
           loading.close();
-          console.log(error);
+          //console.log(error);
         });
       }
     }

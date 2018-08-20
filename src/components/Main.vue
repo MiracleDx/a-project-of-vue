@@ -90,30 +90,30 @@
         }).then(function (response) {
           if (response.data.code == '0') {
             that.blogs = response.data.data.content;
-            console.log(response.data.data);
+            //console.log(response.data.data);
           }
         }).catch(function (error) {
-          console.log(error);
+          //console.log(error);
         });
       // find top 5
       this.$http.get('/es/findTopFive', {
       }).then(function (response) {
         if (response.data.code == '0') {
           that.topFives = response.data.data;
-          console.log(response.data.data);
+          //console.log(response.data.data);
         }
       }).catch(function (error) {
-        console.log(error);
+        //console.log(error);
       });
       // find new 5
       this.$http.get('/es/findNewFive', {
       }).then(function (response) {
         if (response.data.code == '0') {
           that.newFives = response.data.data;
-          console.log(response.data.data);
+          //console.log(response.data.data);
         }
       }).catch(function (error) {
-        console.log(error);
+        //console.log(error);
       });
     },
     methods: {

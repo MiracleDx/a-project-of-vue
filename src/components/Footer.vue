@@ -15,7 +15,7 @@
       },
     methods: {
       show() {
-        this.$alert('<img src="/static/images/avatars/user.jpg" style="width: 50px;">', '', {
+        this.$alert('<img src="/static/images/avatars/wechat.jpg" style="width: 300px;">', '', {
           dangerouslyUseHTMLString: true,
           center: true
         });

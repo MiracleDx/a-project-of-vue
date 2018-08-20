@@ -190,7 +190,7 @@
                     that.$router.go(-1);
                   }, 500);
 
-                  console.log(response.data);
+                  //console.log(response.data);
                 } else {
                   that.$message({
                     type: 'error',
@@ -198,7 +198,7 @@
                   })
                 }
               }).catch(function (error) {
-              console.log(error);
+              //console.log(error);
             });
           }).catch(() => {
             this.$message({
@@ -227,13 +227,13 @@
             content: this.commentCentent
           }).then(function (response) {
             if (response.data.code == '0') {
-              console.log(response.data.data);
+              //console.log(response.data.data);
               that.$message({
                 type: 'info',
                 message: response.data.message
               })
               that.reload();
-              console.log(response.data);
+              //console.log(response.data);
             } else {
               that.$message({
                 type: 'error',
@@ -241,7 +241,7 @@
               })
             }
           }).catch(function (error) {
-            console.log(error);
+            //console.log(error);
           });
         },
         selectUsername(val) {
@@ -264,13 +264,13 @@
               replyUserId: val.createUser
             }).then(function (response) {
               if (response.data.code == '0') {
-                console.log(response.data.data);
+                //console.log(response.data.data);
                 that.$message({
                   type: 'info',
                   message: response.data.message
                 })
                 that.reload();
-                console.log(response.data);
+                //console.log(response.data);
               } else {
                 that.$message({
                   type: 'error',
@@ -278,7 +278,7 @@
                 })
               }
             }).catch(function (error) {
-              console.log(error);
+              //console.log(error);
             });
           }).catch(() => {
             this.$message({
@@ -309,7 +309,7 @@
                     message: response.data.message
                   });
                   that.reload();
-                  console.log(response.data);
+                  //console.log(response.data);
                 } else {
                   that.$message({
                     type: 'error',
@@ -317,7 +317,7 @@
                   })
                 }
               }).catch(function (error) {
-              console.log(error);
+              //console.log(error);
             });
           }).catch(() => {
             this.$message({
@@ -343,7 +343,7 @@
                     type: 'info',
                     message: response.data.message
                   });
-                  console.log(response.data);
+                  //console.log(response.data);
                 } else {
                   that.$message({
                     type: 'error',
@@ -351,7 +351,7 @@
                   })
                 }
               }).catch(function (error) {
-              console.log(error);
+              //console.log(error);
             });
           } else {
             this.$http.get('/total/cancelStatus/' + this.blog.id, {})
@@ -362,7 +362,7 @@
                     type: 'info',
                     message: response.data.message
                   });
-                  console.log(response.data);
+                  //console.log(response.data);
                 } else {
                   that.$message({
                     type: 'error',
@@ -370,7 +370,7 @@
                   })
                 }
               }).catch(function (error) {
-              console.log(error);
+              //console.log(error);
             });
           }
         },
@@ -417,12 +417,12 @@
               if ((that.user.nickname ? that.user.nickname : that.user.username) === localStorage.getItem('username')) {
                 that.show = true;
               }
-              console.log(response.data.data);
+              //console.log(response.data.data);
               that.$message({
                 type: 'info',
                 message: response.data.message
               })
-              console.log(response.data);
+              //console.log(response.data);
             } else {
               that.$message({
                 type: 'error',
@@ -431,7 +431,7 @@
             }
           }).catch(function (error) {
             loading.close();
-            console.log(error);
+            //console.log(error);
           });
 
           this.$http.get('/comment/findAllByBlogId/' + id, {}).then(function (response) {
@@ -443,7 +443,7 @@
               for (let i = 0; i < that.comment.length; i ++) {
                   that.pushProp(that.comment[i]);
                 }
-              console.log(response.data);
+              //console.log(response.data);
             } else {
               that.$message({
                 type: 'error',
@@ -452,7 +452,7 @@
             }
           }).catch(function (error) {
             loading.close();
-            console.log(error);
+            //console.log(error);
           });
         } else {
           this.$message({

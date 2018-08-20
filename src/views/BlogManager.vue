@@ -80,7 +80,7 @@
                   message: response.data.message
                 });
                 that.reload();
-                console.log(response.data);
+                //console.log(response.data);
               } else {
                 that.$message({
                   type: 'error',
@@ -88,7 +88,7 @@
                 })
               }
             }).catch(function (error) {
-            console.log(error);
+            //console.log(error);
           });
         }).catch(() => {
           this.$message({
@@ -119,13 +119,13 @@
       }).then(function (response) {
         if (response.data.code == '0') {
           that.blogs = response.data.data;
-          console.log(response.data.data);
+          //console.log(response.data.data);
           that.$message({
             type: 'info',
             message: response.data.message
           })
           that.isShow = true;
-          console.log(response.data);
+          //console.log(response.data);
         } else {
           that.$message({
             type: 'error',
@@ -133,7 +133,7 @@
           })
         }
       }).catch(function (error) {
-        console.log(error);
+        //console.log(error);
       });
     },
     filters: {

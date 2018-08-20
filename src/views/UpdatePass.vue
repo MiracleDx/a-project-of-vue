@@ -99,7 +99,7 @@
                   that.$store.commit('changeLoginStatus', false);
                   that.$store.commit('clearStatus');
 
-                  console.log(response.data);
+                  //console.log(response.data);
                 } else {
                   that.$message({
                     type: 'error',
@@ -107,7 +107,7 @@
                   })
                 }
               }).catch(function (error) {
-              console.log(error);
+              //console.log(error);
             });
           } else {
             this.$message({

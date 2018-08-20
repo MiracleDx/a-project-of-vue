@@ -13,7 +13,7 @@ axios.interceptors.request.use(
       //  存在将token写入 request header
       config.headers.common['Authorization'] = token;
   }
-  console.log(config)
+  //console.log(config)
   return config;
 },
   err => {
@@ -24,7 +24,7 @@ axios.interceptors.response.use(
   response => {
     if (response.headers.refresh_token !== '' && response.headers.refresh_token !== undefined) {
       localStorage.setItem('token', response.headers.refresh_token);
-      console.log("更新token有效期");
+      //console.log("更新token有效期");
     }
     return response
 },
@@ -70,7 +70,7 @@ function checkStatus (response) {
 function checkCode (res) {
   // 如果code异常(这里已经包括网络错误，服务器错误，后端抛出的错误)，可以弹出一个错误提示，告诉用户
  /* if (res.status === -404) {
-    console.log(res.msg);
+    //console.log(res.msg);
   }
   if (res.data && (!res.data.success)) {
     // alert(res.data.error_msg);
@@ -79,7 +79,7 @@ function checkCode (res) {
   /*if (res.status === 401) {
     Message.warning('登录失效，请重新登录').then((val) => {
     }).catch(() => {
-      console.log('cancel');
+      //console.log('cancel');
     });
   } else if (res.status === 403) {
     Message.warning('没有访问权限')
@@ -93,7 +93,7 @@ export default {
   post (url, data) {  //  post
     return axios({
       method: 'post',
-      baseURL: 'http://192.168.1.132:8180/',
+      baseURL: 'http://127.0.0.1:8180/',
       url,
       data: JSON.stringify(data),
       timeout: 50000,
@@ -116,7 +116,7 @@ export default {
   get (url, params) {  // get
     return axios({
       method: 'get',
-      baseURL: 'http://192.168.1.132:8180/',
+      baseURL: 'http://127.0.0.1:8180/',
       url,
       params, // get 请求时带的参数
       timeout: 50000,
@@ -137,7 +137,7 @@ export default {
   put (url, data) {  // put
     return axios({
       method: 'put',
-      baseURL: 'http://192.168.1.132:8180/',
+      baseURL: 'http://127.0.0.1:8180/',
       url,
       data: JSON.stringify(data),
       timeout: 50000,
@@ -159,7 +159,7 @@ export default {
   delete (url, params) {  // delete
     return axios({
       method: 'delete',
-      baseURL: 'http://192.168.1.132:8180/',
+      baseURL: 'http://127.0.0.1:8180/',
       url,
       params, // get 请求时带的参数
       timeout: 50000,

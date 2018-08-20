@@ -67,7 +67,7 @@
 
       return {
         headers: {},
-        action: "http://127.0.0.1:8180/user/avatarUpload",
+        action: "http://59.110.163.229:8180/user/avatarUpload",
         imageUrl: '',
         ruleForm: {
           mobile: '',
@@ -101,7 +101,7 @@
                     type: 'info',
                     message: response.data.message
                   });
-                  console.log(response.data);
+                  //console.log(response.data);
                 } else {
                   that.$message({
                     type: 'error',
@@ -109,7 +109,7 @@
                   })
                 }
               }).catch(function (error) {
-              console.log(error);
+              //console.log(error);
             });
           } else {
             this.$message({
@@ -173,7 +173,7 @@
     created: function() {
       const token = localStorage.getItem('token');
       this.headers = {
-        'Authorization' : 'yangxl ' + token
+        'Authorization' : token
       };
       let that = this;
       this.$http.get('/user/getNicknameAndMobile/', {})
@@ -181,12 +181,12 @@
           if (response.data.code == '0') {
             that.ruleForm.nickname = response.data.data.nickname;
             that.ruleForm.mobile = response.data.data.mobile;
-            console.log(response.data);
+            //console.log(response.data);
           } else {
-            console.log(response);
+            //console.log(response);
           }
         }).catch(function (error) {
-        console.log(error);
+        //console.log(error);
       });
     }
   }
